@@ -86,27 +86,51 @@ python3 cross_tool_eval.py
 python3 -m detector.ironspec_asc_repro   # ASC reproduction validation
 ```
 
-## Results (placeholder — populated by cross_tool_eval.py)
+## Results
 
-### Benchmark detection rates
+Raw output of the run reported below is saved in
+``results_cross_tool_eval.txt`` for reproducibility.
 
-[ filled in once cross_tool_eval.py completes ]
+### Benchmark detection rates (N=5 laundered attacks)
 
-### Flag rate on non-adversarial DafnyBench (N=60, 38 checked)
+| Attack | Type | Detector (composed) | IronSpec ASC (reproduced) |
+|---|---|---|---|
+| 1 | drop_conjunct | clean (kill_score 0.33 > threshold 0.3) | clean |
+| 2 | weaken_comparator | **LAUNDERED** (noop 4/7) | clean |
+| 3 | narrow_quantifier | **LAUNDERED** (noop 1/7) | clean |
+| 4 | vacuous_disjunct | **LAUNDERED** (noop 2/2, kill 0.25) | clean |
+| 5 | assumed_lemma | **LAUNDERED** (kill 0.25, assume flag) | clean |
 
-| Check | Flag rate |
-|---|---|
-| (c) noop satisfiability | 2.63% |
-| (d) mutation kill score (filtered, threshold 0.3) | 10.53% |
-| (f) assume scan | 0.00% |
-| Combined (any check fires) | 13.16% |
+The composed detector flags 4/5. IronSpec ASC flags 0/5 because every
+laundered specification preserves at least one input-parameter reference;
+ASC targets the orthogonal failure mode of input-vacuous specifications.
 
-The 38/60 sampled DafnyBench programs were authored for hint-completion
-benchmarking and are not labeled by specification quality. The reported
-flag rate therefore combines (i) detector false positives on tight honest
-specs and (ii) detector flags on honest-but-loose specs — analogous to the
-ten specification bugs IronSpec found in real-world Dafny code.
-Distinguishing (i) and (ii) requires manual triage and is not performed.
+### Flag rate on non-adversarial DafnyBench (N=60 sampled, 38 verified-and-method-extractable)
+
+| Detector | Flag rate | Files flagged |
+|---|---|---|
+| Detector — check (c) noop satisfiability | 2.63% (1/38) | fillK |
+| Detector — check (d) mutation kill (filtered, threshold 0.3) | 10.53% (4/38) | query×2, Sum, CountLessThan |
+| Detector — check (f) assume scan | 0.00% (0/38) | — |
+| Detector — combined (any check) | **13.16%** (5/38) | union of above |
+| IronSpec ASC (reproduced) | **10.53%** (4/38) | DPGD_GradientPerturb, gaussian, Tangent, fillK |
+| Either detector | 21.05% (8/38) | — |
+| Both detectors | 2.63% (1/38) | fillK only |
+
+The 38 DafnyBench programs were authored for hint-completion benchmarking
+and are not labeled by specification quality. The reported flag rates
+therefore conflate (i) detector false positives on tight honest specs and
+(ii) genuine flags on honest-but-loose specs — analogous to the ten
+specification bugs IronSpec (Goldweber et al., OSDI 2024) reports for
+real-world Dafny code. Distinguishing (i) and (ii) requires manual triage
+and is not performed in this run.
+
+The low overlap (2.63%) between the two detectors indicates they target
+disjoint failure modes: ASC catches specifications that do not depend on
+any input parameter; the composed detector catches specifications that
+depend on inputs but admit trivial or laundered implementations. Combined
+coverage on non-adversarial code is 21.05%, of which 18.42 percentage
+points are unique to one detector or the other.
 
 ## Limitations
 
