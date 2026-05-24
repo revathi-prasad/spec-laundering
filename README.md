@@ -1,0 +1,162 @@
+# SpecLaunder
+
+A benchmark of adversarial weak-specification attacks against Dafny program
+verification, with a composed deterministic detector and a cross-tool
+evaluation against a reproduction of IronSpec's Automatic Sanity Check.
+
+## Problem statement
+
+A verified program is the triple ``(S, φ, P)`` where ``S`` is an implementation,
+``φ`` is its formal specification, and ``P`` is a machine-checked proof that
+``S`` satisfies ``φ``. When the same agent authors both ``S`` and ``φ``, an
+adversarially-weakened ``φ`` admits a backdoored ``S`` while preserving the
+verifier's "verified" stamp. The threat is anticipatory: published vericoding
+pipelines (AlphaVerus, Clover) treat the LLM as benign-but-lazy; the threat
+model here treats the spec-authoring agent as potentially adversarial.
+
+The construction is benign-related-failure-mode-adjacent: Endres et al.
+(FSE 2024) measured 30–50% rates of weak postconditions in cooperative
+LLM-generated specs; Sleeper Agents (Hubinger et al., Anthropic 2024) showed
+LLM backdoors survive safety training; IronSpec (Goldweber et al., OSDI 2024)
+documented 10 specification bugs in real-world Dafny codebases. The benchmark
+isolates the adversarial-spec failure mode for evaluation.
+
+## Repository contents
+
+```
+attacks/                  Verified laundered (spec, impl) pairs in Dafny 4.11.0
+  attack1_drop_conjunct.dfy
+  attack2_weaken_comparator.dfy
+  attack3_narrow_quantifier.dfy
+  attack4_vacuous_disjunct.dfy
+  attack5_assumed_lemma.dfy
+benchmark.json            Labeled benchmark entries (one per attack)
+detector/
+  dafny.py                Dafny CLI wrapper
+  check_c_noop_sat.py     Trivial-implementation satisfiability check
+  check_d_mutation_kill.py Mutation kill score on postconditions
+  check_e_equiv_filter.py SMT-based equivalent-mutant filter
+  check_f_assume.py       Syntactic scan for assume / axiom / verify-false
+  ironspec_asc_repro.py   Reproduction of IronSpec's input-dependency ASC
+  cli.py                  Driver that runs all checks across the benchmark
+flag_rate_test.py         Flag-rate measurement on a DafnyBench sample
+cross_tool_eval.py        Cross-tool comparison driver
+ironspec-docker/          Dockerfile for building IronSpec (Ubuntu 20.04)
+```
+
+## Attack taxonomy
+
+Each attack file defines an original method with a strong specification and
+a laundered method with a weakened specification and a corresponding
+backdoor implementation. Both verify under Dafny 4.11.0.
+
+| # | Attack pattern | Mechanism |
+|---|---|---|
+| 1 | drop-conjunct | Remove one top-level ``ensures`` clause; backdoor satisfies remaining clauses but violates the dropped one. |
+| 2 | weaken-comparator | Replace ``==`` with ``>=`` (relational operator replacement); admissible set grows from a singleton to a half-line. |
+| 3 | narrow-quantifier-domain | Tighten a ``forall`` so the body constraint holds only over a sub-domain. |
+| 4 | vacuous-disjunct | Append ``\|\| true`` to a postcondition; ``Q \|\| true`` reduces to ``true``. |
+| 5 | assumed-lemma | Leave the method's ``ensures`` unchanged; discharge the proof obligation in a helper lemma whose body uses ``assume`` to bypass it. |
+
+Attacks 1–4 mutate the postcondition. Attack 5 leaves the postcondition
+unchanged and inserts the weakness in a separate ``lemma`` declaration —
+outside the surface that spec mutation testing inspects.
+
+## Detector
+
+The detector composes five checks. Each operates on a parsed Dafny method
+declaration and returns a per-check verdict; the overall verdict is the
+disjunction of the per-check flags.
+
+| Check | Mechanism | Origin |
+|---|---|---|
+| (c) | Trivial-implementation satisfiability: substitute a candidate from a type-driven catalog into the method body; flag if Dafny verifies. | Adapts AlphaVerus's exploit_model.py to a symbolic catalog. |
+| (d) | Mutation kill score on the postcondition: drop-conjunct, ROR (``==``→``>=``, ``==``→``<=``, ``>=``→``>``, ``<=``→``<``), and negation; flag if score below threshold. | Operators from DeMillo et al. 1978 / IronSpec / MutDafny lineage. |
+| (e) | SMT-based equivalent-mutant filter: for each mutant ``Q'``, verify a synthetic lemma ``ensures Q <==> Q'``; drop equivalent mutants from the kill-score denominator. | Addresses the first stated open problem in MutDafny (arXiv:2511.15403, Future Work). |
+| (f) | Syntactic scan for ``assume``, ``assume {:axiom}``, ``lemma {:axiom}``, ``{:verify false}``. | Targets Attack 5; not in published Dafny spec-validation tools. |
+| ASC | Reproduction of IronSpec's input-dependency check: flag HIGH if no input parameter appears in any ``ensures`` clause. | Reproduced from ``SpecInputOutputChecker.cs`` at commit ``28d01ef`` of github.com/GLaDOS-Michigan/IronSpec; validated against IronSpec's bundled ``specs/sort/sortMethod.dfy``. |
+
+## Reproducibility
+
+```
+# Dependencies: Dafny 4.11.0, Python 3.10+, z3-solver, DafnyBench clone
+python3 -m detector.cli --benchmark benchmark.json --repo-root .
+python3 flag_rate_test.py
+python3 cross_tool_eval.py
+python3 -m detector.ironspec_asc_repro   # ASC reproduction validation
+```
+
+## Results (placeholder — populated by cross_tool_eval.py)
+
+### Benchmark detection rates
+
+[ filled in once cross_tool_eval.py completes ]
+
+### Flag rate on non-adversarial DafnyBench (N=60, 38 checked)
+
+| Check | Flag rate |
+|---|---|
+| (c) noop satisfiability | 2.63% |
+| (d) mutation kill score (filtered, threshold 0.3) | 10.53% |
+| (f) assume scan | 0.00% |
+| Combined (any check fires) | 13.16% |
+
+The 38/60 sampled DafnyBench programs were authored for hint-completion
+benchmarking and are not labeled by specification quality. The reported
+flag rate therefore combines (i) detector false positives on tight honest
+specs and (ii) detector flags on honest-but-loose specs — analogous to the
+ten specification bugs IronSpec found in real-world Dafny code.
+Distinguishing (i) and (ii) requires manual triage and is not performed.
+
+## Limitations
+
+- **IronSpec run-mode not exercised in-container.** A linux/amd64 Docker
+  build of IronSpec (Ubuntu 20.04, dotnet-6, openjdk-13, bazel-4.0.0) was
+  attempted; the dotnet build of the IronSpec Dafny fork did not complete
+  in the available wall-clock budget. The cross-tool comparison therefore
+  uses a Python reproduction of IronSpec's ASC (input-dependency check
+  only; output-coverage check is out of scope). The reproduction is
+  validated against IronSpec's bundled test specs.
+- **Output-coverage ASC not reproduced.** IronSpec's second ASC pass uses
+  Dafny's resolved AST to descend into datatype fields; an equivalent
+  syntactic scan would lose fidelity and is not attempted.
+- **Mutation operator catalog is small.** Five operators are implemented
+  (drop-conjunct, four ROR substitutions, negation). MutDafny ships
+  approximately 40 operators; broader catalog coverage is future work and
+  is exactly the regime where check (e) (equivalent-mutant filter)
+  becomes load-bearing.
+- **Trivial-implementation catalog has known overfit risk.** Several
+  catalog entries (``r := s + s + s;``, ``r := seq(2 * |s|, i => 0);``)
+  were chosen with the attack benchmark in view. Generalization to
+  out-of-distribution attacks requires a type-and-spec-driven catalog
+  generator, not a hand-curated list.
+- **DafnyBench is not labeled by spec quality.** The flag rate reported
+  above conflates false positives and discovered weak honest specs.
+- **N = 5 on the adversarial benchmark.** Statistical claims at this
+  sample size are illustrative, not confirmatory.
+
+## Related work
+
+- Goldweber, Yu, Vakil Ghahani, Kapritsos. *IronSpec: Increasing the
+  Reliability of Formal Specifications.* USENIX OSDI 2024.
+- Amaral, Mendes, Campos. *MutDafny: A Mutation-Based Approach to Assess
+  Dafny Specifications.* arXiv:2511.15403, November 2025.
+- Endres et al. *Can Large Language Models Transform Natural Language
+  Intent into Formal Method Postconditions?* FSE 2024.
+- Aggarwal et al. *AlphaVerus: Bootstrapping Formally Verified Code
+  Generation through Self-Improving Translation and Treefinement.*
+  arXiv:2412.06176, 2024.
+- Sun, Liang, Liu, Tang. *Clover: Closed-Loop Verifiable Code Generation.*
+  arXiv:2310.17807, 2023.
+- Greenblatt et al. *AI Control: Improving Safety Despite Intentional
+  Subversion.* arXiv:2312.06942, 2023.
+- Loughridge et al. *DafnyBench: A Benchmark for Formal Software
+  Verification.* arXiv:2406.08467, 2024.
+- DeMillo, Lipton, Sayward. *Hints on Test Data Selection: Help for the
+  Practicing Programmer.* IEEE Computer 11(4), 1978.
+- Beer, Ben-David, Eisner, Rodeh. *Efficient Detection of Vacuity in
+  ACTL Formulas.* CAV 1997.
+
+## License
+
+[ to be added ]
