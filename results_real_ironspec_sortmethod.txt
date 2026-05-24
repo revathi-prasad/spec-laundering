@@ -1,0 +1,52 @@
+Assumes Proof location
+sortSpec.SortSpec  1
+hole evaluation begins for func sortSpec.SortSpec
+/Users/revathiprasad/Documents/GitHub/spec-laundering/IronSpec/specs/sort/sortMethod.dfy
+added(/./sortSpec.dfy) = /sortMethod.dfy
+/Users/revathiprasad/Documents/GitHub/spec-laundering/IronSpec/specs/sort/sortMethod.dfy
+
+---Start Simple Check Ens---
+
+	Sanity check for(parameter) :: input
+		Sanity Check Failed for: input
+	Sanity check for(output) :: output
+		Sanity Check Failed for: output
+
+SimpleCheck Ens PASS = False
+
+---Start Simple Check Req---
+
+Sanity check (parameter) for :: input
+	Sanity Check Failed for: input
+Sanity check (output) for :: output
+	Sanity Check Failed for: output
+SimpleCheck Req PASS = False
+
+--- Start Full Check For Ensures ---
+
+Sanity Checking Parameters:
+
+	Sanity check for(parameter) :: input
+		Sanity Check Failed for: input
+	Sanity check for(parameter) :: |input|
+		Sanity Check Failed for: |input|
+	Sanity check for(parameter) :: input[0]
+		Sanity Check Failed for: input[0]
+
+-- FLAG(HIGH) -- : NONE of Ensures depend on Any input parameters 
+
+All parameters Pass Sanity Check? = False
+
+Sanity Checking OutPuts:
+
+	Sanity check for(output) :: output
+		Sanity Check Failed for: output
+	Sanity check for(output) :: |output|
+	Sanity check for(output) :: output[0]
+		Sanity Check Failed for: output[0]
+
+-- FLAG(Medium) -- : Only some parts of output (output) are constrained by the post conditions
+All Output Pass Sanity Check? = False
+
+------DONE------
+

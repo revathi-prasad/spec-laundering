@@ -1,0 +1,9 @@
+method has_close_elements(numbers: seq<real>, threshold: real) returns (res: bool)
+  requires threshold >= 0.0
+  ensures res ==> exists i: int, j: int :: 0 <= i < |numbers| && 0 <= j < |numbers| && i != j && (if numbers[i] - numbers[j] < 0.0 then numbers[j] - numbers[i] else numbers[i] - numbers[j]) < threshold
+
+
+{
+  res := false;
+}
+

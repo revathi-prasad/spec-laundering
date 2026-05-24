@@ -118,12 +118,33 @@ ASC targets the orthogonal failure mode of input-vacuous specifications.
 | Both detectors | 2.63% (1/38) | fillK only |
 
 The 38 DafnyBench programs were authored for hint-completion benchmarking
-and are not labeled by specification quality. The reported flag rates
-therefore conflate (i) detector false positives on tight honest specs and
-(ii) genuine flags on honest-but-loose specs — analogous to the ten
-specification bugs IronSpec (Goldweber et al., OSDI 2024) reports for
-real-world Dafny code. Distinguishing (i) and (ii) requires manual triage
-and is not performed in this run.
+and are not labeled by specification quality. Manual triage of the 8 flagged
+files (recorded in `results_triage.md`) decomposes the flag rates:
+
+| Detector | True positive (discovered_loose) | True FP | Reproduction defect |
+|---|---|---|---|
+| Composed detector | 2.63% (1/38, fillK) | **10.53% (4/38)** | — |
+| ASC reproduction | **7.89% (3/38)** | 0.00% (0/38) | 2.63% (1/38, Tangent) |
+
+Findings from the triage:
+
+1. ASC outperforms the composed detector on this corpus: higher TP rate
+   (7.89% vs 2.63%) and zero algorithm-level false positives. The
+   dominant honest-loose pattern in the sample is methods with zero
+   `ensures` clauses (DPGD_GradientPerturbation, gaussian, fillK), which
+   is exactly ASC's targeted failure mode.
+2. The composed detector's 10.53% true-FP rate is structurally tied to
+   the mutation kill score on single-clause specs. All four FPs have the
+   shape `ensures r == f(inputs)`. The implemented mutation operator
+   catalog (drop-conjunct, four ROR weakenings, negation) admits at most
+   one killable mutant against an honest equality spec, forcing a low
+   kill score independent of spec quality. The recommended fix is to
+   gate check (d) on multi-clause specs and defer single-clause cases
+   to check (c).
+3. The Tangent flag in the ASC column is caused by a defect in the
+   reproduction's `extract_ensures_for_method` regex extractor (captures
+   single-line `ensures` only). The original IronSpec implementation
+   operates on Dafny's resolved AST and is not affected.
 
 The low overlap (2.63%) between the two detectors indicates they target
 disjoint failure modes: ASC catches specifications that do not depend on
@@ -134,13 +155,20 @@ points are unique to one detector or the other.
 
 ## Limitations
 
-- **IronSpec run-mode not exercised in-container.** A linux/amd64 Docker
-  build of IronSpec (Ubuntu 20.04, dotnet-6, openjdk-13, bazel-4.0.0) was
-  attempted; the dotnet build of the IronSpec Dafny fork did not complete
-  in the available wall-clock budget. The cross-tool comparison therefore
-  uses a Python reproduction of IronSpec's ASC (input-dependency check
-  only; output-coverage check is out of scope). The reproduction is
-  validated against IronSpec's bundled test specs.
+- **IronSpec on the SpecLaunder benchmark requires file restructuring.**
+  IronSpec builds and runs natively on macOS Apple Silicon (5m45s build;
+  see `local_macos_ironspec_setup.md`). The Linux Docker route hung at
+  the gradle step under x86 emulation; the native macOS path avoids
+  that. Real IronSpec ASC ran on IronSpec's bundled
+  `specs/sort/sortMethod.dfy` and emitted both the HIGH input-dependency
+  flag and a Medium output-coverage flag — output saved in
+  `results_real_ironspec_sortmethod.txt`. Running real ASC on the
+  SpecLaunder attack files requires restructuring each attack into a
+  module + named spec-predicate layout (IronSpec's ASC chokes on
+  unqualified names with an internal `StartIndex` exception). The Python
+  reproduction handles inline ensures directly and is in that sense more
+  portable than real ASC; the cross-tool comparison reported below uses
+  it as a stand-in for the input-dependency portion of ASC.
 - **Output-coverage ASC not reproduced.** IronSpec's second ASC pass uses
   Dafny's resolved AST to descend into datatype fields; an equivalent
   syntactic scan would lose fidelity and is not attempted.
@@ -156,8 +184,17 @@ points are unique to one detector or the other.
   generator, not a hand-curated list.
 - **DafnyBench is not labeled by spec quality.** The flag rate reported
   above conflates false positives and discovered weak honest specs.
-- **N = 5 on the adversarial benchmark.** Statistical claims at this
-  sample size are illustrative, not confirmatory.
+- **Original adversarial benchmark N=5; expanded N=26 with a construction
+  bias.** A programmatic expansion (`expand_benchmark.py`) generates 21
+  additional entries by applying three attack patterns (vacuous_disjunct,
+  drop_conjunct, weaken_comparator) to DafnyBench base problems and
+  using check (c)'s trivial-impl catalog as the backdoor source.
+  Detection on the expanded set therefore has a tautology: check (c)
+  flags nearly every generated entry because the same catalog is used
+  on both ends. Detection numbers from check (d) and check (f) on the
+  expanded set are independent of this construction bias and remain
+  informative. Full expanded-benchmark detector output is saved in
+  `results_expanded_detector.txt`.
 
 ## Related work
 
