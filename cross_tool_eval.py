@@ -33,7 +33,7 @@ DAFNYBENCH_MAX_BYTES = 3000
 _METHOD_RE = re.compile(r"method\s+(\w+)\s*\([^)]*\)\s*returns\s*\(")
 
 
-def _our_flag(dfy: Path, method: str) -> tuple[bool, list[str]]:
+def _speclaunder_flag(dfy: Path, method: str) -> tuple[bool, list[str]]:
     """Run the SpecLaunder detector on one method. Returns (flagged, reasons)."""
     reasons: list[str] = []
     c_res = cc.run_check_c(dfy, method)
@@ -63,7 +63,7 @@ def _benchmark_table() -> dict[str, dict[str, bool]]:
     entries = bench["entries"]
     print("# Cross-tool comparison: benchmark (laundered specs)")
     print()
-    hdr = f"{'id':<40} {'attack':<22} {'our_detector':<15} {'ironspec_asc':<15} caught_by"
+    hdr = f"{'id':<40} {'attack':<22} {'speclaunder_detector':<15} {'ironspec_asc':<15} caught_by"
     print(hdr)
     print("-" * len(hdr))
 
@@ -71,21 +71,21 @@ def _benchmark_table() -> dict[str, dict[str, bool]]:
     for entry in entries:
         dfy = Path(entry["dafny_file"])
         method = entry["laundered_method"]
-        ours, our_reasons = _our_flag(dfy, method)
+        speclaunder, speclaunder_reasons = _speclaunder_flag(dfy, method)
         ascf, asc_reason = _asc_flag(dfy, method)
         caught = []
-        if ours:
-            caught.append("ours")
+        if speclaunder:
+            caught.append("speclaunder")
         if ascf:
             caught.append("asc")
         if not caught:
             caught = ["none"]
         print(
             f"{entry['id']:<40} {entry['attack_type']:<22} "
-            f"{('LAUNDERED' if ours else 'clean'):<15} "
+            f"{('LAUNDERED' if speclaunder else 'clean'):<15} "
             f"{('HIGH' if ascf else 'clean'):<15} {','.join(caught)}"
         )
-        summary[entry["id"]] = {"ours": ours, "asc": ascf}
+        summary[entry["id"]] = {"speclaunder": speclaunder, "asc": ascf}
     return summary
 
 
@@ -103,11 +103,11 @@ def _dafnybench_table() -> dict[str, int]:
     files = _dafnybench_sample()
     print(f"# Cross-tool flag rates on {len(files)} non-adversarial DafnyBench programs")
     print()
-    hdr = f"{'file':<58} {'method':<22} {'our_detector':<15} {'ironspec_asc':<15}"
+    hdr = f"{'file':<58} {'method':<22} {'speclaunder_detector':<15} {'ironspec_asc':<15}"
     print(hdr)
     print("-" * len(hdr))
 
-    counts = {"checked": 0, "ours": 0, "asc": 0, "either": 0, "both": 0}
+    counts = {"checked": 0, "speclaunder": 0, "asc": 0, "either": 0, "both": 0}
     for f in files:
         src = f.read_text(encoding="utf-8")
         m = _METHOD_RE.search(src)
@@ -117,19 +117,19 @@ def _dafnybench_table() -> dict[str, int]:
         if not df.verify_file(f, timeout_s=20).success:
             continue
         counts["checked"] += 1
-        ours, _ = _our_flag(f, method)
+        speclaunder, _ = _speclaunder_flag(f, method)
         ascf, _ = _asc_flag(f, method)
-        if ours:
-            counts["ours"] += 1
+        if speclaunder:
+            counts["speclaunder"] += 1
         if ascf:
             counts["asc"] += 1
-        if ours or ascf:
+        if speclaunder or ascf:
             counts["either"] += 1
-        if ours and ascf:
+        if speclaunder and ascf:
             counts["both"] += 1
         print(
             f"{f.name[:56]:<58} {method[:20]:<22} "
-            f"{('flag' if ours else 'clean'):<15} "
+            f"{('flag' if speclaunder else 'clean'):<15} "
             f"{('flag' if ascf else 'clean'):<15}"
         )
 
@@ -137,7 +137,7 @@ def _dafnybench_table() -> dict[str, int]:
     n = counts["checked"]
     print(f"summary on {n} programs:")
     if n:
-        print(f"  our detector flag rate : {counts['ours']}/{n} = {counts['ours']/n:.2%}")
+        print(f"  speclaunder detector flag rate : {counts['speclaunder']}/{n} = {counts['speclaunder']/n:.2%}")
         print(f"  ironspec asc flag rate : {counts['asc']}/{n} = {counts['asc']/n:.2%}")
         print(f"  either flagged         : {counts['either']}/{n} = {counts['either']/n:.2%}")
         print(f"  both flagged           : {counts['both']}/{n} = {counts['both']/n:.2%}")

@@ -41,7 +41,9 @@ detector/
   cli.py                  Driver that runs all checks across the benchmark
 flag_rate_test.py         Flag-rate measurement on a DafnyBench sample
 cross_tool_eval.py        Cross-tool comparison driver
-ironspec-docker/          Dockerfile for building IronSpec (Ubuntu 20.04)
+local_macos_ironspec_setup.md  Reproducibility notes for running IronSpec on macOS
+results_*.txt             Raw outputs from the runs reported in this document
+results_triage.md         Manual triage of flagged files in the DafnyBench sample
 ```
 
 ## Attack taxonomy
@@ -184,17 +186,10 @@ points are unique to one detector or the other.
   generator, not a hand-curated list.
 - **DafnyBench is not labeled by spec quality.** The flag rate reported
   above conflates false positives and discovered weak honest specs.
-- **Original adversarial benchmark N=5; expanded N=26 with a construction
-  bias.** A programmatic expansion (`expand_benchmark.py`) generates 21
-  additional entries by applying three attack patterns (vacuous_disjunct,
-  drop_conjunct, weaken_comparator) to DafnyBench base problems and
-  using check (c)'s trivial-impl catalog as the backdoor source.
-  Detection on the expanded set therefore has a tautology: check (c)
-  flags nearly every generated entry because the same catalog is used
-  on both ends. Detection numbers from check (d) and check (f) on the
-  expanded set are independent of this construction bias and remain
-  informative. Full expanded-benchmark detector output is saved in
-  `results_expanded_detector.txt`.
+- **Adversarial benchmark N=5.** Statistical claims at this sample size
+  are illustrative, not confirmatory. Programmatic expansion using the
+  trivial-implementation catalog as the backdoor source produces a
+  construction bias toward check (c) by definition and is not used here.
 
 ## Related work
 

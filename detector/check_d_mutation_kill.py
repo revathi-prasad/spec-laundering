@@ -122,8 +122,11 @@ def extract_ensures_for_method(
 
     ensures_lines: list[int] = []
     ensures_exprs: list[str] = []
+    # `returns` is included to skip the case where a method signature spans
+    # multiple lines, with `returns (...)` on its own line after the parameter
+    # list. This is common in AWS-style Dafny formatting.
     contract_intro = re.compile(
-        r"^\s*(ensures|requires|decreases|modifies|reads)\b"
+        r"^\s*(ensures|requires|decreases|modifies|reads|returns)\b"
     )
     for j in range(method_start + 1, len(lines)):
         stripped = lines[j].strip()

@@ -1,9 +1,9 @@
 Assumes Proof location
 sortSpec.SortSpec  1
 hole evaluation begins for func sortSpec.SortSpec
-/Users/revathiprasad/Documents/GitHub/spec-laundering/IronSpec/specs/sort/sortMethod.dfy
+/path/to/SpecLaunder/IronSpec/specs/sort/sortMethod.dfy
 added(/./sortSpec.dfy) = /sortMethod.dfy
-/Users/revathiprasad/Documents/GitHub/spec-laundering/IronSpec/specs/sort/sortMethod.dfy
+/path/to/SpecLaunder/IronSpec/specs/sort/sortMethod.dfy
 
 ---Start Simple Check Ens---
 

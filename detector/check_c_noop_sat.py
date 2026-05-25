@@ -158,6 +158,30 @@ def synthesize_trivials(
             impls.append(f"{out_name} := seq(1, i => {default});")
         return impls
 
+    # Result<T> wrapper: postconditions of the form `res.Success? ==> P` are
+    # vacuously satisfied by `res := Failure`. Where T is a known type, also
+    # synthesize Success(trivial) candidates. Assumes the datatype has the
+    # constructors `Success(value: T)` and `Failure` (with no fields), the
+    # convention used in this benchmark's scaffolding.
+    if out_type.startswith("Result<") and out_type.endswith(">"):
+        impls.append(f"{out_name} := Failure;")
+        inner = out_type[len("Result<"):-1].strip()
+        if inner.startswith("seq<") and inner.endswith(">"):
+            elt = inner[4:-1]
+            default = _default_value_for_element(elt)
+            if default is not None:
+                impls.append(f"{out_name} := Success([]);")
+                seq_inputs = [n for n, t in inputs if t.strip().startswith("seq<")]
+                for name in seq_inputs:
+                    impls.append(
+                        f"{out_name} := Success(seq(|{name}|, i => {default}));"
+                    )
+        elif inner == "int":
+            impls.append(f"{out_name} := Success(0);")
+        elif inner == "bool":
+            impls.append(f"{out_name} := Success(false);")
+        return impls
+
     return []
 
 
