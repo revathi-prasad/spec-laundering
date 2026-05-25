@@ -20,7 +20,7 @@ The drop-conjunct and ROR operators produce strictly weaker mutants; an
 honest implementation generally satisfies them. The negate operator produces
 a non-weakening mutant; an honest implementation generally violates it.
 
-Equivalent-mutant filtering (check (e)) is not applied at this layer.
+Equivalent-mutant filtering (check (c)) is not applied at this layer.
 """
 
 from __future__ import annotations
@@ -69,7 +69,7 @@ class MutationResult:
 
 
 @dataclass
-class CheckDResult:
+class CheckBResult:
     """Aggregated kill-score result for one method.
 
     Attributes
@@ -217,7 +217,7 @@ def _splice_ensures(
     return "\n".join(out) + ("\n" if source.endswith("\n") else "")
 
 
-def run_check_d(file_path: Path | str, method_name: str) -> CheckDResult:
+def run_check_b(file_path: Path | str, method_name: str) -> CheckBResult:
     """Run the mutation kill score check on one method.
 
     Parameters
@@ -227,13 +227,13 @@ def run_check_d(file_path: Path | str, method_name: str) -> CheckDResult:
 
     Returns
     -------
-    CheckDResult
+    CheckBResult
     """
     file_path = Path(file_path)
     source = file_path.read_text(encoding="utf-8")
     ensures_lines, ensures_exprs = extract_ensures_for_method(source, method_name)
     if not ensures_exprs:
-        return CheckDResult(
+        return CheckBResult(
             file_path=str(file_path),
             method_name=method_name,
             original_ensures=[],
@@ -254,7 +254,7 @@ def run_check_d(file_path: Path | str, method_name: str) -> CheckDResult:
             survivors.append(MutationResult(m, verifies=True))
 
     total = len(mutants)
-    return CheckDResult(
+    return CheckBResult(
         file_path=str(file_path),
         method_name=method_name,
         original_ensures=ensures_exprs,

@@ -29,7 +29,7 @@ class AssumeFinding:
 
 
 @dataclass
-class CheckFResult:
+class CheckDResult:
     """Aggregated findings for one file."""
 
     file_path: str
@@ -51,7 +51,7 @@ def _strip_comments(source: str) -> str:
     return re.sub(r"//[^\n]*", "", no_block)
 
 
-def scan_source(source: str, file_path: str = "<string>") -> CheckFResult:
+def scan_source(source: str, file_path: str = "<string>") -> CheckDResult:
     """Scan a Dafny source string.
 
     Parameters
@@ -63,10 +63,10 @@ def scan_source(source: str, file_path: str = "<string>") -> CheckFResult:
 
     Returns
     -------
-    CheckFResult
+    CheckDResult
     """
     cleaned = _strip_comments(source)
-    result = CheckFResult(file_path=file_path)
+    result = CheckDResult(file_path=file_path)
     for line_no, line in enumerate(cleaned.splitlines(), start=1):
         text = line.strip()
         if not text:
@@ -83,7 +83,7 @@ def scan_source(source: str, file_path: str = "<string>") -> CheckFResult:
     return result
 
 
-def scan_file(path: Path | str) -> CheckFResult:
+def scan_file(path: Path | str) -> CheckDResult:
     """Scan a Dafny file.
 
     Parameters
@@ -93,7 +93,7 @@ def scan_file(path: Path | str) -> CheckFResult:
 
     Returns
     -------
-    CheckFResult
+    CheckDResult
     """
     path = Path(path)
     return scan_source(path.read_text(encoding="utf-8"), file_path=str(path))

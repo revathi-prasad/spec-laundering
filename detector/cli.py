@@ -7,10 +7,10 @@ import json
 import sys
 from pathlib import Path
 
-from . import check_c_noop_sat as check_c
-from . import check_d_mutation_kill as check_d
-from . import check_e_equiv_filter as check_e
-from . import check_f_assume as check_f
+from . import check_a_noop_sat as check_a
+from . import check_b_mutation_kill as check_b
+from . import check_c_equiv_filter as check_c
+from . import check_d_assume as check_d
 from . import severity as sev
 
 
@@ -32,7 +32,7 @@ def run(benchmark_path: Path, repo_root: Path) -> int:
     print()
     hdr = (
         f"{'id':<40} {'attack':<22} "
-        f"{'c':<6} {'d':<6} {'f':<4} {'severity':<10} {'consensus':<10}"
+        f"{'a':<6} {'b':<6} {'d':<4} {'severity':<10} {'consensus':<10}"
     )
     print(hdr)
     print("-" * len(hdr))
@@ -47,9 +47,9 @@ def run(benchmark_path: Path, repo_root: Path) -> int:
 
         print(
             f"{entry['id']:<40} {entry['attack_type']:<22} "
-            f"{_fmt(sev_res.component_c):<6} "
-            f"{_fmt(sev_res.component_d):<6} "
-            f"{_fmt(sev_res.component_f):<4} "
+            f"{_fmt(sev_res.component_a):<6} "
+            f"{_fmt(sev_res.component_b):<6} "
+            f"{_fmt(sev_res.component_d):<4} "
             f"{_fmt(sev_res.severity):<10} "
             f"{sev_res.consensus:<10}"
         )

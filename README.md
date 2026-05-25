@@ -33,10 +33,10 @@ attacks/                  Verified laundered (spec, impl) pairs in Dafny 4.11.0
 benchmark.json            Labeled benchmark entries (one per attack)
 detector/
   dafny.py                Dafny CLI wrapper
-  check_c_noop_sat.py     Trivial-implementation satisfiability check
-  check_d_mutation_kill.py Mutation kill score on postconditions
-  check_e_equiv_filter.py SMT-based equivalent-mutant filter
-  check_f_assume.py       Syntactic scan for assume / axiom / verify-false
+  check_a_noop_sat.py     Trivial-implementation satisfiability check
+  check_b_mutation_kill.py Mutation kill score on postconditions
+  check_c_equiv_filter.py SMT-based equivalent-mutant filter
+  check_d_assume.py       Syntactic scan for assume / axiom / verify-false
   ironspec_asc_repro.py   Reproduction of IronSpec's input-dependency ASC
   cli.py                  Driver that runs all checks across the benchmark
 flag_rate_test.py         Flag-rate measurement on a DafnyBench sample
@@ -66,16 +66,17 @@ outside the surface that spec mutation testing inspects.
 
 ## Detector
 
-The detector composes five checks. Each operates on a parsed Dafny method
-declaration and returns a per-check verdict; the overall verdict is the
-disjunction of the per-check flags.
+The detector composes four checks plus the reproduced IronSpec ASC for
+cross-tool comparison. Each operates on a parsed Dafny method declaration
+and returns a per-check signal; check (c) is a filter applied to check
+(b)'s mutant denominator and does not emit its own signal column.
 
 | Check | Mechanism | Origin |
 |---|---|---|
-| (c) | Trivial-implementation satisfiability: substitute a candidate from a type-driven catalog into the method body; flag if Dafny verifies. | Adapts AlphaVerus's exploit_model.py to a symbolic catalog. |
-| (d) | Mutation kill score on the postcondition: drop-conjunct, ROR (``==``→``>=``, ``==``→``<=``, ``>=``→``>``, ``<=``→``<``), and negation; flag if score below threshold. | Operators from DeMillo et al. 1978 / IronSpec / MutDafny lineage. |
-| (e) | SMT-based equivalent-mutant filter: for each mutant ``Q'``, verify a synthetic lemma ``ensures Q <==> Q'``; drop equivalent mutants from the kill-score denominator. | Addresses the first stated open problem in MutDafny (arXiv:2511.15403, Future Work). |
-| (f) | Syntactic scan for ``assume``, ``assume {:axiom}``, ``lemma {:axiom}``, ``{:verify false}``. | Targets Attack 5; not in published Dafny spec-validation tools. |
+| (a) | Trivial-implementation satisfiability: substitute a candidate from a type-driven catalog into the method body; flag if Dafny verifies. | Adapts AlphaVerus's exploit_model.py to a symbolic catalog. |
+| (b) | Mutation kill score on the postcondition: drop-conjunct, ROR (``==``→``>=``, ``==``→``<=``, ``>=``→``>``, ``<=``→``<``), and negation; flag if score below threshold. | Operators from DeMillo et al. 1978 / IronSpec / MutDafny lineage. |
+| (c) | SMT-based equivalent-mutant filter: for each mutant ``Q'``, verify a synthetic lemma ``ensures Q <==> Q'``; drop equivalent mutants from check (b)'s kill-score denominator. | Addresses the first stated open problem in MutDafny (arXiv:2511.15403, Future Work). |
+| (d) | Syntactic scan for ``assume``, ``assume {:axiom}``, ``lemma {:axiom}``, ``{:verify false}``. | Targets Attack 5; not in published Dafny spec-validation tools. |
 | ASC | Reproduction of IronSpec's input-dependency check: flag HIGH if no input parameter appears in any ``ensures`` clause. | Reproduced from ``SpecInputOutputChecker.cs`` at commit ``28d01ef`` of github.com/GLaDOS-Michigan/IronSpec; validated against IronSpec's bundled ``specs/sort/sortMethod.dfy``. |
 
 ## Reproducibility
@@ -111,9 +112,9 @@ ASC targets the orthogonal failure mode of input-vacuous specifications.
 
 | Detector | Flag rate | Files flagged |
 |---|---|---|
-| Detector — check (c) noop satisfiability | 2.63% (1/38) | fillK |
-| Detector — check (d) mutation kill (filtered, threshold 0.3) | 10.53% (4/38) | query×2, Sum, CountLessThan |
-| Detector — check (f) assume scan | 0.00% (0/38) | — |
+| Detector — check (a) noop satisfiability | 2.63% (1/38) | fillK |
+| Detector — check (b) mutation kill (filtered, threshold 0.3) | 10.53% (4/38) | query×2, Sum, CountLessThan |
+| Detector — check (d) assume scan | 0.00% (0/38) | — |
 | Detector — combined (any check) | **13.16%** (5/38) | union of above |
 | IronSpec ASC (reproduced) | **10.53%** (4/38) | DPGD_GradientPerturb, gaussian, Tangent, fillK |
 | Either detector | 21.05% (8/38) | — |
@@ -141,8 +142,8 @@ Findings from the triage:
    catalog (drop-conjunct, four ROR weakenings, negation) admits at most
    one killable mutant against an honest equality spec, forcing a low
    kill score independent of spec quality. The recommended fix is to
-   gate check (d) on multi-clause specs and defer single-clause cases
-   to check (c).
+   gate check (b) on multi-clause specs and defer single-clause cases
+   to check (a).
 3. The Tangent flag in the ASC column is caused by a defect in the
    reproduction's `extract_ensures_for_method` regex extractor (captures
    single-line `ensures` only). The original IronSpec implementation
@@ -177,7 +178,7 @@ points are unique to one detector or the other.
 - **Mutation operator catalog is small.** Five operators are implemented
   (drop-conjunct, four ROR substitutions, negation). MutDafny ships
   approximately 40 operators; broader catalog coverage is future work and
-  is exactly the regime where check (e) (equivalent-mutant filter)
+  is exactly the regime where check (c) (equivalent-mutant filter)
   becomes load-bearing.
 - **Trivial-implementation catalog has known overfit risk.** Several
   catalog entries (``r := s + s + s;``, ``r := seq(2 * |s|, i => 0);``)
@@ -189,7 +190,7 @@ points are unique to one detector or the other.
 - **Adversarial benchmark N=5.** Statistical claims at this sample size
   are illustrative, not confirmatory. Programmatic expansion using the
   trivial-implementation catalog as the backdoor source produces a
-  construction bias toward check (c) by definition and is not used here.
+  construction bias toward check (a) by definition and is not used here.
 
 ## Related work
 

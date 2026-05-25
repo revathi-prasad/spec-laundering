@@ -28,7 +28,7 @@ Classification scheme:
 **`Correctness_tmp_tmpwqvg5q_4_Sorting_Tangent.dfy` :: `Tangent`**
 - `bug_in_reproduction`. The spec contains multi-line `ensures` clauses
   of the form `ensures !found ==> forall i, j :: ...`. The reproduction's
-  ensures extractor in `detector/check_d_mutation_kill.py` captures only
+  ensures extractor in `detector/check_b_mutation_kill.py` captures only
   the first line, missing the body of the `forall`. The captured
   fragment `ensures !found ==>` contains no input parameter name, so
   ASC flags HIGH spuriously. The original IronSpec implementation operates
@@ -59,7 +59,7 @@ Classification scheme:
 **`CVS-Projto1_tmp_tmpb1o0bu8z_searchSort.dfy` :: `fillK`**
 - `discovered_loose`. The method declares no `ensures` clause. ASC flags
   HIGH because no input is referenced in any ensures. The composed
-  detector flags via check (c): trivial implementations `b := true;`
+  detector flags via check (a): trivial implementations `b := true;`
   and `b := false;` both satisfy the (empty) postcondition.
 
 ## Refined flag-rate decomposition
@@ -95,8 +95,8 @@ Classification scheme:
 
 ## Recommended detector fixes
 
-- **For check (d) on single-clause specs:** skip mutation kill score
-  computation when the spec has only one clause and defer to check (c)
+- **For check (b) on single-clause specs:** skip mutation kill score
+  computation when the spec has only one clause and defer to check (a)
   for that case. Alternative: add a fifth mutator class that constructs
   strengthening rather than weakening mutants (e.g., a strict-equality
   refinement of an inequality, a domain-narrowing refinement of a

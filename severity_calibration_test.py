@@ -35,7 +35,7 @@ def _adversarial_run() -> list[float]:
     entries = bench["entries"]
     print(f"# adversarial benchmark (N={len(entries)})")
     print()
-    print(f"{'id':<42} {'c':<6} {'d':<6} {'f':<4} {'severity':<10} consensus")
+    print(f"{'id':<42} {'a':<6} {'b':<6} {'d':<4} {'severity':<10} consensus")
     print("-" * 80)
     scores: list[float] = []
     for entry in entries:
@@ -46,9 +46,9 @@ def _adversarial_run() -> list[float]:
 
         print(
             f"{entry['id']:<42} "
-            f"{_fmt(sev_res.component_c):<6} "
-            f"{_fmt(sev_res.component_d):<6} "
-            f"{_fmt(sev_res.component_f):<4} "
+            f"{_fmt(sev_res.component_a):<6} "
+            f"{_fmt(sev_res.component_b):<6} "
+            f"{_fmt(sev_res.component_d):<4} "
             f"{_fmt(sev_res.severity):<10} "
             f"{sev_res.consensus}"
         )
@@ -63,7 +63,7 @@ def _dafnybench_run() -> list[float]:
     print()
     print(f"# non-adversarial DafnyBench sample (N up to {len(files)})")
     print()
-    print(f"{'file':<58} {'method':<22} {'c':<6} {'d':<6} {'f':<4} {'severity':<10} consensus")
+    print(f"{'file':<58} {'method':<22} {'a':<6} {'b':<6} {'d':<4} {'severity':<10} consensus")
     print("-" * 120)
     scores: list[float] = []
     for f in files:
@@ -81,9 +81,9 @@ def _dafnybench_run() -> list[float]:
 
         print(
             f"{f.name[:56]:<58} {method[:20]:<22} "
-            f"{_fmt(sev_res.component_c):<6} "
-            f"{_fmt(sev_res.component_d):<6} "
-            f"{_fmt(sev_res.component_f):<4} "
+            f"{_fmt(sev_res.component_a):<6} "
+            f"{_fmt(sev_res.component_b):<6} "
+            f"{_fmt(sev_res.component_d):<4} "
             f"{_fmt(sev_res.severity):<10} "
             f"{sev_res.consensus}"
         )

@@ -76,24 +76,24 @@ specification produce identical mutation kill score signatures. Both:
 
 The triage of the DafnyBench sample (``results_triage.md``) documents
 this empirically: four DafnyBench programs flagged by the composed
-detector's check (d) (``query`` from CVS-Projto1 and from CVS-handout1,
+detector's check (b) (``query`` from CVS-Projto1 and from CVS-handout1,
 ``Sum`` from Clover, ``CountLessThan`` from Clover) all share this
 single-clause equality shape, and all are honest. The detector's check
-(d) signature for these is identical to that for Attack 5.
+(b) signature for these is identical to that for Attack 5.
 
 ## Consequence
 
 Detecting axiom-based cheating requires inspecting language constructs
 that lie outside the postcondition syntax. The syntactic scan
-implemented as check (f) — searching for ``assume``, ``assume {:axiom}``,
+implemented as check (d) — searching for ``assume``, ``assume {:axiom}``,
 ``lemma {:axiom}``, and ``{:verify false}`` — is the orthogonal signal
 needed to make Attack 5 detectable.
 
 This is not a deficiency of mutation testing as a technique. It is a
 statement about the cheating dimensions a mutation operator catalog
-covers by construction (the weakened-obligations dimension in
-BabelBench's taxonomy) and the dimensions it does not (the
-sorry/axioms dimension).
+covers by construction: weakened postconditions are addressed by
+operator catalogs that are pure functions on ``Ensures``; axiom-based
+proof bypass in lemma bodies is not.
 
 ## Scope of the claim
 

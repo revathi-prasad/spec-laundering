@@ -1,6 +1,6 @@
 """Cheating-severity score for a (specification, implementation) pair.
 
-Aggregates the orthogonal signals produced by checks (c), (d/e), and (f)
+Aggregates the orthogonal signals produced by checks (a), (b/c), and (d)
 into a single numeric severity score in [0, 1]. Higher = more evidence of
 specification looseness or axiom-based proof bypass.
 
@@ -13,20 +13,24 @@ warrant flagging; averaging would let one dimension hide another.
 
 Components
 ----------
-component_c : float in [0, 1] or None
+component_a : float in [0, 1] or None
     Fraction of trivial implementations from the type-driven catalog that
     satisfy the specification. None if no trivials applicable to the
     method signature (e.g., unsupported return type).
 
-component_d : float in [0, 1] or None
+component_b : float in [0, 1] or None
     1 - filtered_kill_score. Filtered kill score is the mutation kill
-    score after equivalent-mutant filtering (check (e)). None if no
+    score after equivalent-mutant filtering (check (c)). None if no
     mutants applicable (e.g., extractor failed).
 
-component_f : float in {0.0, 1.0}
+component_d : float in {0.0, 1.0}
     1.0 if any of assume / {:axiom} / lemma {:axiom} / {:verify false}
     patterns is present in the source; 0.0 otherwise. The check is
     syntactic and binary by construction.
+
+There is no component_c because check (c) is a filter applied to check
+(b)'s mutant denominator rather than a standalone signal channel; it
+modifies component_b in place.
 
 Relation to prior work
 ----------------------
@@ -61,7 +65,7 @@ Limitations
   severity in those dimensions.
 - The score is normalized but not probabilistic; it does not express
   "probability of cheating" and should not be interpreted as such.
-- Single-clause equality specs produce a check (d) component near
+- Single-clause equality specs produce a check (b) component near
   1 - 1/N where N is the number of mutation operators, irrespective of
   spec quality. The triage in results_triage.md documents this
   structural failure mode of mutation kill score on single-clause specs.
@@ -72,10 +76,10 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from . import check_c_noop_sat as cc
-from . import check_d_mutation_kill as cd
-from . import check_e_equiv_filter as ce
-from . import check_f_assume as cf
+from . import check_a_noop_sat as ca
+from . import check_b_mutation_kill as cb
+from . import check_c_equiv_filter as cc
+from . import check_d_assume as cd
 
 
 @dataclass
@@ -86,12 +90,13 @@ class SeverityResult:
     ----------
     file_path : str
     method_name : str
-    component_c : float or None
-        Normalized check (c) signal.
-    component_d : float or None
-        Normalized check (d/e) signal.
-    component_f : float
-        Binary check (f) signal in {0.0, 1.0}.
+    component_a : float or None
+        Normalized check (a) signal.
+    component_b : float or None
+        Normalized check (b/c) signal (mutation kill, after equivalent-
+        mutant filtering).
+    component_d : float
+        Binary check (d) signal in {0.0, 1.0}.
     severity : float or None
         max over non-None components; None if all components are None.
     consensus : int
@@ -101,32 +106,32 @@ class SeverityResult:
 
     file_path: str
     method_name: str
-    component_c: float | None
-    component_d: float | None
-    component_f: float
+    component_a: float | None
+    component_b: float | None
+    component_d: float
     severity: float | None = field(init=False)
     consensus: int = field(init=False)
 
     def __post_init__(self) -> None:
-        signals = [s for s in (self.component_c, self.component_d, self.component_f) if s is not None]
+        signals = [s for s in (self.component_a, self.component_b, self.component_d) if s is not None]
         self.severity = max(signals) if signals else None
         self.consensus = sum(1 for s in signals if s >= 0.5)
 
 
-def _component_c(c_res: cc.NoopResult) -> float | None:
-    if c_res.trivial_impls_tried == 0:
+def _component_a(a_res: ca.NoopResult) -> float | None:
+    if a_res.trivial_impls_tried == 0:
         return None
-    return len(c_res.satisfying_impls) / c_res.trivial_impls_tried
+    return len(a_res.satisfying_impls) / a_res.trivial_impls_tried
 
 
-def _component_d(e_res: ce.FilteredKillResult) -> float | None:
-    if e_res.filtered_tried == 0:
+def _component_b(c_res: cc.FilteredKillResult) -> float | None:
+    if c_res.filtered_tried == 0:
         return None
-    return 1.0 - e_res.filtered_kill_score
+    return 1.0 - c_res.filtered_kill_score
 
 
-def _component_f(f_res: cf.CheckFResult) -> float:
-    return 1.0 if f_res.flagged else 0.0
+def _component_d(d_res: cd.CheckDResult) -> float:
+    return 1.0 if d_res.flagged else 0.0
 
 
 def compute_severity(file_path: Path | str, method_name: str) -> SeverityResult:
@@ -144,14 +149,14 @@ def compute_severity(file_path: Path | str, method_name: str) -> SeverityResult:
     SeverityResult
     """
     file_path = Path(file_path)
-    c_res = cc.run_check_c(file_path, method_name)
-    d_res = cd.run_check_d(file_path, method_name)
-    e_res = ce.run_check_e(file_path, method_name, raw_result=d_res)
-    f_res = cf.scan_file(file_path)
+    a_res = ca.run_check_a(file_path, method_name)
+    b_res = cb.run_check_b(file_path, method_name)
+    c_res = cc.run_check_c(file_path, method_name, raw_result=b_res)
+    d_res = cd.scan_file(file_path)
     return SeverityResult(
         file_path=str(file_path),
         method_name=method_name,
-        component_c=_component_c(c_res),
-        component_d=_component_d(e_res),
-        component_f=_component_f(f_res),
+        component_a=_component_a(a_res),
+        component_b=_component_b(c_res),
+        component_d=_component_d(d_res),
     )

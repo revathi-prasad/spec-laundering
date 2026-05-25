@@ -50,8 +50,8 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
-from . import check_c_noop_sat as cc
-from . import check_d_mutation_kill as cd
+from . import check_a_noop_sat as ca
+from . import check_b_mutation_kill as cb
 
 
 @dataclass
@@ -100,8 +100,8 @@ def run_asc(file_path: Path | str, method_name: str) -> ASCResult:
     file_path = Path(file_path)
     source = file_path.read_text(encoding="utf-8")
 
-    inputs, _ = cc.extract_signature(source, method_name)
-    _, ensures_clauses = cd.extract_ensures_for_method(source, method_name)
+    inputs, _ = ca.extract_signature(source, method_name)
+    _, ensures_clauses = cb.extract_ensures_for_method(source, method_name)
 
     if inputs is None or not inputs:
         return ASCResult(

@@ -21,9 +21,9 @@ import sys
 import time
 from pathlib import Path
 
-from detector import check_c_noop_sat as cc
-from detector import check_d_mutation_kill as cd
-from detector import check_f_assume as cf
+from detector import check_a_noop_sat as ca
+from detector import check_b_mutation_kill as cb
+from detector import check_d_assume as cd
 from detector import dafny as df
 
 BENCH_DIR = Path("DafnyBench/DafnyBench/dataset/ground_truth")
@@ -62,12 +62,12 @@ def main() -> int:
     print()
     hdr = (
         f"{'file':<58} {'method':<22} {'baseline':<10} "
-        f"{'c flag':<8} {'d kill':<10} {'f flag':<8} verdict"
+        f"{'a flag':<8} {'b kill':<10} {'d flag':<8} verdict"
     )
     print(hdr)
     print("-" * len(hdr))
 
-    counts = {"checked": 0, "c": 0, "d": 0, "f": 0, "any": 0, "skipped": 0}
+    counts = {"checked": 0, "a": 0, "b": 0, "d": 0, "any": 0, "skipped": 0}
     t0 = time.time()
     for f in files:
         src = f.read_text(encoding="utf-8")
@@ -82,30 +82,30 @@ def main() -> int:
             continue
 
         counts["checked"] += 1
-        c_res = cc.run_check_c(f, method)
-        d_res = cd.run_check_d(f, method)
-        f_res = cf.scan_file(f)
+        a_res = ca.run_check_a(f, method)
+        b_res = cb.run_check_b(f, method)
+        d_res = cd.scan_file(f)
 
-        c_flag = c_res.flagged
-        d_flag = d_res.mutants_tried > 0 and d_res.kill_score < KILL_THRESHOLD
-        f_flag = f_res.flagged
-        any_flag = c_flag or d_flag or f_flag
+        a_flag = a_res.flagged
+        b_flag = b_res.mutants_tried > 0 and b_res.kill_score < KILL_THRESHOLD
+        d_flag = d_res.flagged
+        any_flag = a_flag or b_flag or d_flag
 
-        if c_flag:
-            counts["c"] += 1
+        if a_flag:
+            counts["a"] += 1
+        if b_flag:
+            counts["b"] += 1
         if d_flag:
             counts["d"] += 1
-        if f_flag:
-            counts["f"] += 1
         if any_flag:
             counts["any"] += 1
 
         verdict = "flagged" if any_flag else "clean"
         print(
             f"{f.name[:56]:<58} {method[:20]:<22} {'ok':<10} "
-            f"{('1' if c_flag else '0'):<8} "
-            f"{(f'{d_res.kill_score:.2f}' if d_res.mutants_tried else 'n/a'):<10} "
-            f"{('1' if f_flag else '0'):<8} {verdict}"
+            f"{('1' if a_flag else '0'):<8} "
+            f"{(f'{b_res.kill_score:.2f}' if b_res.mutants_tried else 'n/a'):<10} "
+            f"{('1' if d_flag else '0'):<8} {verdict}"
         )
 
     print()
@@ -117,9 +117,9 @@ def main() -> int:
     print(f"  files checked      : {counts['checked']}")
     if counts["checked"]:
         n = counts["checked"]
-        print(f"  check (c) flag rate: {counts['c']}/{n} = {counts['c']/n:.2%}")
+        print(f"  check (a) flag rate: {counts['a']}/{n} = {counts['a']/n:.2%}")
+        print(f"  check (b) flag rate: {counts['b']}/{n} = {counts['b']/n:.2%}")
         print(f"  check (d) flag rate: {counts['d']}/{n} = {counts['d']/n:.2%}")
-        print(f"  check (f) flag rate: {counts['f']}/{n} = {counts['f']/n:.2%}")
         print(f"  combined flag rate : {counts['any']}/{n} = {counts['any']/n:.2%}")
     return 0
 

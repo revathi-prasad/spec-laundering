@@ -2,7 +2,7 @@
 
 Runs both detectors over:
 
-1. The 5-entry SpecLaunder benchmark of laundered (spec, impl) pairs.
+1. The SpecLaunder benchmark of laundered (spec, impl) pairs.
 2. A sample of non-adversarial DafnyBench programs.
 
 Reports per-attack outcomes and aggregate flag rates so the two tools can be
@@ -17,10 +17,10 @@ import sys
 import time
 from pathlib import Path
 
-from detector import check_c_noop_sat as cc
-from detector import check_d_mutation_kill as cd
-from detector import check_e_equiv_filter as ce
-from detector import check_f_assume as cf
+from detector import check_a_noop_sat as ca
+from detector import check_b_mutation_kill as cb
+from detector import check_c_equiv_filter as cc
+from detector import check_d_assume as cd
 from detector import dafny as df
 from detector import ironspec_asc_repro as asc
 
@@ -36,16 +36,16 @@ _METHOD_RE = re.compile(r"method\s+(\w+)\s*\([^)]*\)\s*returns\s*\(")
 def _speclaunder_flag(dfy: Path, method: str) -> tuple[bool, list[str]]:
     """Run the SpecLaunder detector on one method. Returns (flagged, reasons)."""
     reasons: list[str] = []
-    c_res = cc.run_check_c(dfy, method)
-    d_res = cd.run_check_d(dfy, method)
-    e_res = ce.run_check_e(dfy, method, raw_result=d_res)
-    f_res = cf.scan_file(dfy)
-    if c_res.flagged:
-        reasons.append(f"noop({len(c_res.satisfying_impls)}/{c_res.trivial_impls_tried})")
-    if e_res.filtered_tried and e_res.filtered_kill_score < KILL_THRESHOLD:
-        reasons.append(f"low_kill={e_res.filtered_kill_score:.2f}")
-    if f_res.flagged:
-        reasons.append(f"assume({len(f_res.findings)})")
+    a_res = ca.run_check_a(dfy, method)
+    b_res = cb.run_check_b(dfy, method)
+    c_res = cc.run_check_c(dfy, method, raw_result=b_res)
+    d_res = cd.scan_file(dfy)
+    if a_res.flagged:
+        reasons.append(f"noop({len(a_res.satisfying_impls)}/{a_res.trivial_impls_tried})")
+    if c_res.filtered_tried and c_res.filtered_kill_score < KILL_THRESHOLD:
+        reasons.append(f"low_kill={c_res.filtered_kill_score:.2f}")
+    if d_res.flagged:
+        reasons.append(f"assume({len(d_res.findings)})")
     return (bool(reasons), reasons)
 
 
