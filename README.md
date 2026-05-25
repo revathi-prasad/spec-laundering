@@ -94,19 +94,11 @@ python3 -m detector.ironspec_asc_repro   # ASC reproduction validation
 Raw output of the run reported below is saved in
 ``results_cross_tool_eval.txt`` for reproducibility.
 
-### Benchmark detection rates (N=5 laundered attacks)
+### Benchmark detection rates
 
-| Attack | Type | Detector (composed) | IronSpec ASC (reproduced) |
-|---|---|---|---|
-| 1 | drop_conjunct | clean (kill_score 0.33 > threshold 0.3) | clean |
-| 2 | weaken_comparator | **LAUNDERED** (noop 4/7) | clean |
-| 3 | narrow_quantifier | **LAUNDERED** (noop 1/7) | clean |
-| 4 | vacuous_disjunct | **LAUNDERED** (noop 2/2, kill 0.25) | clean |
-| 5 | assumed_lemma | **LAUNDERED** (kill 0.25, assume flag) | clean |
-
-The composed detector flags 4/5. IronSpec ASC flags 0/5 because every
-laundered specification preserves at least one input-parameter reference;
-ASC targets the orthogonal failure mode of input-vacuous specifications.
+Per-attack severity components on the N=6 benchmark are reported in
+`WRITEUP.md` Section 4.1, with the distributional separation against
+DafnyBench and the threshold trade-off in Sections 4.2–4.3.
 
 ### Flag rate on non-adversarial DafnyBench (N=60 sampled, 38 verified-and-method-extractable)
 
