@@ -1,27 +1,27 @@
 {
-  "n": 33,
+  "n": 82,
   "coupling": {
-    "tp": 18,
+    "tp": 41,
     "fp": 0,
-    "tn": 15,
+    "tn": 41,
     "fn": 0,
     "accuracy": 1.0,
     "tpr": 1.0,
     "fpr": 0.0
   },
   "mutation_best_threshold": {
-    "threshold_on_(1-kill)": -0.0,
-    "accuracy": 0.545,
-    "tpr": 1.0,
-    "fpr": 1.0
+    "threshold_on_(1-kill)": 0.483,
+    "accuracy": 0.561,
+    "tpr": 0.415,
+    "fpr": 0.293
   },
   "mutation_fixed_kill_lt_0.3": {
     "tp": 0,
-    "fp": 1,
-    "tn": 14,
-    "fn": 18,
-    "accuracy": 0.424,
+    "fp": 4,
+    "tn": 37,
+    "fn": 41,
+    "accuracy": 0.451,
     "tpr": 0.0,
-    "fpr": 0.067
+    "fpr": 0.098
   }
 }
