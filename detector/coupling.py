@@ -366,11 +366,24 @@ def run_coupling(
     )
 
 
+def _insert_ensures(source: str, method_name: str, clause: str) -> str | None:
+    m = re.search(rf"method\s+{re.escape(method_name)}\b", source)
+    if not m:
+        return None
+    brace = source.find("{", m.end())
+    if brace == -1:
+        return None
+    return source[:brace] + "\n  ensures " + clause + "\n" + source[brace:]
+
+
 def _violates(source: str, method_name: str, clause: str, verify) -> bool:
-    """True iff ``B`` (in ``source``) fails ``ensures clause`` — i.e. splicing the
-    single clause as the method's postcondition makes Dafny reject."""
+    """True iff B fails `ensures clause`. Splices the clause as the method's
+    postcondition, or inserts one if the method has none, then checks Dafny rejects."""
     ens_lines, _ = mut.extract_ensures_for_method(source, method_name)
-    if not ens_lines:
-        return False  # cannot isolate a postcondition site; treat as not-violated
-    spliced = mut._splice_ensures(source, ens_lines, [clause])
+    if ens_lines:
+        spliced = mut._splice_ensures(source, ens_lines, [clause])
+    else:
+        spliced = _insert_ensures(source, method_name, clause)
+        if spliced is None:
+            return False
     return not verify(spliced).success

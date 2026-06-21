@@ -21,6 +21,15 @@ from detector import coupling as coup
 ATTACKS = Path(__file__).resolve().parent.parent / "attacks"
 
 
+class TestInsertEnsures(unittest.TestCase):
+    def test_inserts_when_method_has_no_ensures(self):
+        src = "method M(s: seq<int>) returns (r: int)\n  requires |s| > 0\n{ r := 0; }\n"
+        out = coup._insert_ensures(src, "M", "r == s[0]")
+        self.assertIn("ensures r == s[0]", out)
+        # ensures must sit before the body brace
+        self.assertLess(out.index("ensures r == s[0]"), out.index("{ r := 0;"))
+
+
 class TestIdentifiers(unittest.TestCase):
     def test_leading_identifiers_skip_field_access(self):
         idents = coup.extract_identifiers("res.Success? ==> |res.value| == Length(input.digestAlgorithm) as nat")
