@@ -12,10 +12,10 @@
     },
     {
       "problem_id": "double_length",
-      "problem_nl": "Return a sequence whose length is exactly twice that of s.",
+      "problem_nl": "Return s concatenated with itself.",
       "signature": "method DoubleLength(s: seq<int>) returns (r: seq<int>)",
       "requires": [],
-      "strong_spec": ["|r| == 2 * |s|"],
+      "strong_spec": ["r == s + s"],
       "reference_impl": "r := s + s;"
     },
     {

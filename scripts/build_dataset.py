@@ -19,6 +19,7 @@ from detector import coupling as coup  # noqa: E402
 from detector import dafny  # noqa: E402
 from detector import dataset as ds  # noqa: E402
 from detector import difftest  # noqa: E402
+from detector import mutation as mut  # noqa: E402
 from detector import trivial_gen as tg  # noqa: E402
 from detector import weakening_gen as wg  # noqa: E402
 
@@ -67,13 +68,15 @@ def main() -> int:
                     f.write(src)
                     tmp = Path(f.name)
                 verdict = coup.run_coupling(tmp, name, strong).verdict
+                mk = mut.run_mutation(tmp, name)
+                kill = mk.kill_score if mk.mutants_tried else None
                 tmp.unlink()
                 label = ds.classify_label(True, correct) if correct is not None else "inconclusive"
                 rec = {
                     "problem": p["problem_id"], "candidate": cname,
                     "weak_spec": ws, "verifies": True,
                     "behaviorally_correct": correct, "label": label,
-                    "coupling": verdict,
+                    "coupling": verdict, "mutation_kill": kill,
                 }
                 records.append(rec)
                 if label == "verified_but_wrong" and verdict == "honest":

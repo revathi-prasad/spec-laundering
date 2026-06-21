@@ -1,7 +1,7 @@
 {
-  "n_records": 34,
+  "n_records": 33,
   "by_label": {
-    "honest_correct": 16,
+    "honest_correct": 15,
     "verified_but_wrong": 18
   },
   "verified_but_wrong_caught_by_coupling": "18/18",
@@ -18,7 +18,8 @@
       "verifies": true,
       "behaviorally_correct": true,
       "label": "honest_correct",
-      "coupling": "honest"
+      "coupling": "honest",
+      "mutation_kill": 0.631578947368421
     },
     {
       "problem": "max_of_two",
@@ -30,7 +31,8 @@
       "verifies": true,
       "behaviorally_correct": true,
       "label": "honest_correct",
-      "coupling": "honest"
+      "coupling": "honest",
+      "mutation_kill": 0.5714285714285714
     },
     {
       "problem": "max_of_two",
@@ -42,7 +44,8 @@
       "verifies": true,
       "behaviorally_correct": true,
       "label": "honest_correct",
-      "coupling": "honest"
+      "coupling": "honest",
+      "mutation_kill": 0.5714285714285714
     },
     {
       "problem": "max_of_two",
@@ -54,7 +57,8 @@
       "verifies": true,
       "behaviorally_correct": false,
       "label": "verified_but_wrong",
-      "coupling": "spec_laundering"
+      "coupling": "spec_laundering",
+      "mutation_kill": 0.35714285714285715
     },
     {
       "problem": "max_of_two",
@@ -66,7 +70,8 @@
       "verifies": true,
       "behaviorally_correct": true,
       "label": "honest_correct",
-      "coupling": "honest"
+      "coupling": "honest",
+      "mutation_kill": 0.8
     },
     {
       "problem": "max_of_two",
@@ -79,7 +84,8 @@
       "verifies": true,
       "behaviorally_correct": true,
       "label": "honest_correct",
-      "coupling": "honest"
+      "coupling": "honest",
+      "mutation_kill": 0.5789473684210527
     },
     {
       "problem": "max_of_two",
@@ -92,18 +98,20 @@
       "verifies": true,
       "behaviorally_correct": true,
       "label": "honest_correct",
-      "coupling": "honest"
+      "coupling": "honest",
+      "mutation_kill": 0.631578947368421
     },
     {
       "problem": "double_length",
       "candidate": "reference",
       "weak_spec": [
-        "|r| == 2 * |s|"
+        "r == s + s"
       ],
       "verifies": true,
       "behaviorally_correct": true,
       "label": "honest_correct",
-      "coupling": "honest"
+      "coupling": "honest",
+      "mutation_kill": 0.7142857142857143
     },
     {
       "problem": "double_length",
@@ -112,7 +120,8 @@
       "verifies": true,
       "behaviorally_correct": true,
       "label": "honest_correct",
-      "coupling": "honest"
+      "coupling": "honest",
+      "mutation_kill": null
     },
     {
       "problem": "double_length",
@@ -121,7 +130,8 @@
       "verifies": true,
       "behaviorally_correct": false,
       "label": "verified_but_wrong",
-      "coupling": "spec_laundering"
+      "coupling": "spec_laundering",
+      "mutation_kill": null
     },
     {
       "problem": "double_length",
@@ -130,7 +140,8 @@
       "verifies": true,
       "behaviorally_correct": false,
       "label": "verified_but_wrong",
-      "coupling": "spec_laundering"
+      "coupling": "spec_laundering",
+      "mutation_kill": null
     },
     {
       "problem": "double_length",
@@ -139,7 +150,8 @@
       "verifies": true,
       "behaviorally_correct": false,
       "label": "verified_but_wrong",
-      "coupling": "spec_laundering"
+      "coupling": "spec_laundering",
+      "mutation_kill": null
     },
     {
       "problem": "double_length",
@@ -148,117 +160,116 @@
       "verifies": true,
       "behaviorally_correct": false,
       "label": "verified_but_wrong",
-      "coupling": "spec_laundering"
+      "coupling": "spec_laundering",
+      "mutation_kill": null
     },
     {
       "problem": "double_length",
       "candidate": "reference",
       "weak_spec": [
-        "|r| >= 2 * |s|"
+        "r <= s + s"
       ],
       "verifies": true,
       "behaviorally_correct": true,
       "label": "honest_correct",
-      "coupling": "honest"
-    },
-    {
-      "problem": "double_length",
-      "candidate": "reference",
-      "weak_spec": [
-        "|r| <= 2 * |s|"
-      ],
-      "verifies": true,
-      "behaviorally_correct": true,
-      "label": "honest_correct",
-      "coupling": "honest"
+      "coupling": "honest",
+      "mutation_kill": 0.7142857142857143
     },
     {
       "problem": "double_length",
       "candidate": "trivial0",
       "weak_spec": [
-        "|r| <= 2 * |s|"
+        "r <= s + s"
       ],
       "verifies": true,
       "behaviorally_correct": false,
       "label": "verified_but_wrong",
-      "coupling": "spec_laundering"
+      "coupling": "spec_laundering",
+      "mutation_kill": 0.8571428571428571
     },
     {
       "problem": "double_length",
       "candidate": "trivial1",
       "weak_spec": [
-        "|r| <= 2 * |s|"
+        "r <= s + s"
       ],
       "verifies": true,
       "behaviorally_correct": false,
       "label": "verified_but_wrong",
-      "coupling": "spec_laundering"
+      "coupling": "spec_laundering",
+      "mutation_kill": 0.8571428571428571
     },
     {
       "problem": "double_length",
       "candidate": "trivial2",
       "weak_spec": [
-        "|r| <= 2 * |s|"
+        "r <= s + s"
       ],
       "verifies": true,
       "behaviorally_correct": false,
       "label": "verified_but_wrong",
-      "coupling": "spec_laundering"
+      "coupling": "spec_laundering",
+      "mutation_kill": 0.8571428571428571
     },
     {
       "problem": "double_length",
       "candidate": "reference",
       "weak_spec": [
-        "(|r| == 2 * |s|) || true"
+        "(r == s + s) || true"
       ],
       "verifies": true,
       "behaviorally_correct": true,
       "label": "honest_correct",
-      "coupling": "honest"
+      "coupling": "honest",
+      "mutation_kill": 0.4444444444444444
     },
     {
       "problem": "double_length",
       "candidate": "trivial0",
       "weak_spec": [
-        "(|r| == 2 * |s|) || true"
+        "(r == s + s) || true"
       ],
       "verifies": true,
       "behaviorally_correct": false,
       "label": "verified_but_wrong",
-      "coupling": "spec_laundering"
+      "coupling": "spec_laundering",
+      "mutation_kill": 0.6666666666666666
     },
     {
       "problem": "double_length",
       "candidate": "trivial1",
       "weak_spec": [
-        "(|r| == 2 * |s|) || true"
+        "(r == s + s) || true"
       ],
       "verifies": true,
       "behaviorally_correct": false,
       "label": "verified_but_wrong",
-      "coupling": "spec_laundering"
+      "coupling": "spec_laundering",
+      "mutation_kill": 0.6666666666666666
     },
     {
       "problem": "double_length",
       "candidate": "trivial2",
       "weak_spec": [
-        "(|r| == 2 * |s|) || true"
+        "(r == s + s) || true"
       ],
       "verifies": true,
       "behaviorally_correct": false,
       "label": "verified_but_wrong",
-      "coupling": "spec_laundering"
+      "coupling": "spec_laundering",
+      "mutation_kill": 0.6666666666666666
     },
     {
       "problem": "double_length",
       "candidate": "trivial3",
       "weak_spec": [
-        "(|r| == 2 * |s|) || true"
+        "(r == s + s) || true"
       ],
       "verifies": true,
       "behaviorally_correct": false,
       "label": "verified_but_wrong",
-      "coupling": "spec_laundering"
+      "coupling": "spec_laundering",
+      "mutation_kill": 0.6666666666666666
     },
     {
       "problem": "get_first",
@@ -269,7 +280,8 @@
       "verifies": true,
       "behaviorally_correct": true,
       "label": "honest_correct",
-      "coupling": "honest"
+      "coupling": "honest",
+      "mutation_kill": 0.5
     },
     {
       "problem": "get_first",
@@ -278,7 +290,8 @@
       "verifies": true,
       "behaviorally_correct": true,
       "label": "honest_correct",
-      "coupling": "honest"
+      "coupling": "honest",
+      "mutation_kill": null
     },
     {
       "problem": "get_first",
@@ -287,7 +300,8 @@
       "verifies": true,
       "behaviorally_correct": false,
       "label": "verified_but_wrong",
-      "coupling": "spec_laundering"
+      "coupling": "spec_laundering",
+      "mutation_kill": null
     },
     {
       "problem": "get_first",
@@ -296,7 +310,8 @@
       "verifies": true,
       "behaviorally_correct": false,
       "label": "verified_but_wrong",
-      "coupling": "spec_laundering"
+      "coupling": "spec_laundering",
+      "mutation_kill": null
     },
     {
       "problem": "get_first",
@@ -305,7 +320,8 @@
       "verifies": true,
       "behaviorally_correct": false,
       "label": "verified_but_wrong",
-      "coupling": "spec_laundering"
+      "coupling": "spec_laundering",
+      "mutation_kill": null
     },
     {
       "problem": "get_first",
@@ -316,7 +332,8 @@
       "verifies": true,
       "behaviorally_correct": true,
       "label": "honest_correct",
-      "coupling": "honest"
+      "coupling": "honest",
+      "mutation_kill": 0.5
     },
     {
       "problem": "get_first",
@@ -327,7 +344,8 @@
       "verifies": true,
       "behaviorally_correct": true,
       "label": "honest_correct",
-      "coupling": "honest"
+      "coupling": "honest",
+      "mutation_kill": 0.5
     },
     {
       "problem": "get_first",
@@ -338,7 +356,8 @@
       "verifies": true,
       "behaviorally_correct": true,
       "label": "honest_correct",
-      "coupling": "honest"
+      "coupling": "honest",
+      "mutation_kill": 0.25
     },
     {
       "problem": "get_first",
@@ -349,7 +368,8 @@
       "verifies": true,
       "behaviorally_correct": false,
       "label": "verified_but_wrong",
-      "coupling": "spec_laundering"
+      "coupling": "spec_laundering",
+      "mutation_kill": 0.5
     },
     {
       "problem": "get_first",
@@ -360,7 +380,8 @@
       "verifies": true,
       "behaviorally_correct": false,
       "label": "verified_but_wrong",
-      "coupling": "spec_laundering"
+      "coupling": "spec_laundering",
+      "mutation_kill": 0.5
     },
     {
       "problem": "get_first",
@@ -371,7 +392,8 @@
       "verifies": true,
       "behaviorally_correct": false,
       "label": "verified_but_wrong",
-      "coupling": "spec_laundering"
+      "coupling": "spec_laundering",
+      "mutation_kill": 0.5
     }
   ]
 }
