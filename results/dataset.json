@@ -1,0 +1,377 @@
+{
+  "n_records": 34,
+  "by_label": {
+    "honest_correct": 16,
+    "verified_but_wrong": 18
+  },
+  "verified_but_wrong_caught_by_coupling": "18/18",
+  "evasions": 0,
+  "records": [
+    {
+      "problem": "max_of_two",
+      "candidate": "reference",
+      "weak_spec": [
+        "r >= a",
+        "r >= b",
+        "r == a || r == b"
+      ],
+      "verifies": true,
+      "behaviorally_correct": true,
+      "label": "honest_correct",
+      "coupling": "honest"
+    },
+    {
+      "problem": "max_of_two",
+      "candidate": "reference",
+      "weak_spec": [
+        "r >= b",
+        "r == a || r == b"
+      ],
+      "verifies": true,
+      "behaviorally_correct": true,
+      "label": "honest_correct",
+      "coupling": "honest"
+    },
+    {
+      "problem": "max_of_two",
+      "candidate": "reference",
+      "weak_spec": [
+        "r >= a",
+        "r == a || r == b"
+      ],
+      "verifies": true,
+      "behaviorally_correct": true,
+      "label": "honest_correct",
+      "coupling": "honest"
+    },
+    {
+      "problem": "max_of_two",
+      "candidate": "trivial3",
+      "weak_spec": [
+        "r >= a",
+        "r == a || r == b"
+      ],
+      "verifies": true,
+      "behaviorally_correct": false,
+      "label": "verified_but_wrong",
+      "coupling": "spec_laundering"
+    },
+    {
+      "problem": "max_of_two",
+      "candidate": "reference",
+      "weak_spec": [
+        "r >= a",
+        "r >= b"
+      ],
+      "verifies": true,
+      "behaviorally_correct": true,
+      "label": "honest_correct",
+      "coupling": "honest"
+    },
+    {
+      "problem": "max_of_two",
+      "candidate": "reference",
+      "weak_spec": [
+        "r >= a",
+        "r >= b",
+        "r >= a || r == b"
+      ],
+      "verifies": true,
+      "behaviorally_correct": true,
+      "label": "honest_correct",
+      "coupling": "honest"
+    },
+    {
+      "problem": "max_of_two",
+      "candidate": "reference",
+      "weak_spec": [
+        "r >= a",
+        "r >= b",
+        "r <= a || r == b"
+      ],
+      "verifies": true,
+      "behaviorally_correct": true,
+      "label": "honest_correct",
+      "coupling": "honest"
+    },
+    {
+      "problem": "double_length",
+      "candidate": "reference",
+      "weak_spec": [
+        "|r| == 2 * |s|"
+      ],
+      "verifies": true,
+      "behaviorally_correct": true,
+      "label": "honest_correct",
+      "coupling": "honest"
+    },
+    {
+      "problem": "double_length",
+      "candidate": "reference",
+      "weak_spec": [],
+      "verifies": true,
+      "behaviorally_correct": true,
+      "label": "honest_correct",
+      "coupling": "honest"
+    },
+    {
+      "problem": "double_length",
+      "candidate": "trivial0",
+      "weak_spec": [],
+      "verifies": true,
+      "behaviorally_correct": false,
+      "label": "verified_but_wrong",
+      "coupling": "spec_laundering"
+    },
+    {
+      "problem": "double_length",
+      "candidate": "trivial1",
+      "weak_spec": [],
+      "verifies": true,
+      "behaviorally_correct": false,
+      "label": "verified_but_wrong",
+      "coupling": "spec_laundering"
+    },
+    {
+      "problem": "double_length",
+      "candidate": "trivial2",
+      "weak_spec": [],
+      "verifies": true,
+      "behaviorally_correct": false,
+      "label": "verified_but_wrong",
+      "coupling": "spec_laundering"
+    },
+    {
+      "problem": "double_length",
+      "candidate": "trivial3",
+      "weak_spec": [],
+      "verifies": true,
+      "behaviorally_correct": false,
+      "label": "verified_but_wrong",
+      "coupling": "spec_laundering"
+    },
+    {
+      "problem": "double_length",
+      "candidate": "reference",
+      "weak_spec": [
+        "|r| >= 2 * |s|"
+      ],
+      "verifies": true,
+      "behaviorally_correct": true,
+      "label": "honest_correct",
+      "coupling": "honest"
+    },
+    {
+      "problem": "double_length",
+      "candidate": "reference",
+      "weak_spec": [
+        "|r| <= 2 * |s|"
+      ],
+      "verifies": true,
+      "behaviorally_correct": true,
+      "label": "honest_correct",
+      "coupling": "honest"
+    },
+    {
+      "problem": "double_length",
+      "candidate": "trivial0",
+      "weak_spec": [
+        "|r| <= 2 * |s|"
+      ],
+      "verifies": true,
+      "behaviorally_correct": false,
+      "label": "verified_but_wrong",
+      "coupling": "spec_laundering"
+    },
+    {
+      "problem": "double_length",
+      "candidate": "trivial1",
+      "weak_spec": [
+        "|r| <= 2 * |s|"
+      ],
+      "verifies": true,
+      "behaviorally_correct": false,
+      "label": "verified_but_wrong",
+      "coupling": "spec_laundering"
+    },
+    {
+      "problem": "double_length",
+      "candidate": "trivial2",
+      "weak_spec": [
+        "|r| <= 2 * |s|"
+      ],
+      "verifies": true,
+      "behaviorally_correct": false,
+      "label": "verified_but_wrong",
+      "coupling": "spec_laundering"
+    },
+    {
+      "problem": "double_length",
+      "candidate": "reference",
+      "weak_spec": [
+        "(|r| == 2 * |s|) || true"
+      ],
+      "verifies": true,
+      "behaviorally_correct": true,
+      "label": "honest_correct",
+      "coupling": "honest"
+    },
+    {
+      "problem": "double_length",
+      "candidate": "trivial0",
+      "weak_spec": [
+        "(|r| == 2 * |s|) || true"
+      ],
+      "verifies": true,
+      "behaviorally_correct": false,
+      "label": "verified_but_wrong",
+      "coupling": "spec_laundering"
+    },
+    {
+      "problem": "double_length",
+      "candidate": "trivial1",
+      "weak_spec": [
+        "(|r| == 2 * |s|) || true"
+      ],
+      "verifies": true,
+      "behaviorally_correct": false,
+      "label": "verified_but_wrong",
+      "coupling": "spec_laundering"
+    },
+    {
+      "problem": "double_length",
+      "candidate": "trivial2",
+      "weak_spec": [
+        "(|r| == 2 * |s|) || true"
+      ],
+      "verifies": true,
+      "behaviorally_correct": false,
+      "label": "verified_but_wrong",
+      "coupling": "spec_laundering"
+    },
+    {
+      "problem": "double_length",
+      "candidate": "trivial3",
+      "weak_spec": [
+        "(|r| == 2 * |s|) || true"
+      ],
+      "verifies": true,
+      "behaviorally_correct": false,
+      "label": "verified_but_wrong",
+      "coupling": "spec_laundering"
+    },
+    {
+      "problem": "get_first",
+      "candidate": "reference",
+      "weak_spec": [
+        "r == s[0]"
+      ],
+      "verifies": true,
+      "behaviorally_correct": true,
+      "label": "honest_correct",
+      "coupling": "honest"
+    },
+    {
+      "problem": "get_first",
+      "candidate": "reference",
+      "weak_spec": [],
+      "verifies": true,
+      "behaviorally_correct": true,
+      "label": "honest_correct",
+      "coupling": "honest"
+    },
+    {
+      "problem": "get_first",
+      "candidate": "trivial0",
+      "weak_spec": [],
+      "verifies": true,
+      "behaviorally_correct": false,
+      "label": "verified_but_wrong",
+      "coupling": "spec_laundering"
+    },
+    {
+      "problem": "get_first",
+      "candidate": "trivial1",
+      "weak_spec": [],
+      "verifies": true,
+      "behaviorally_correct": false,
+      "label": "verified_but_wrong",
+      "coupling": "spec_laundering"
+    },
+    {
+      "problem": "get_first",
+      "candidate": "trivial2",
+      "weak_spec": [],
+      "verifies": true,
+      "behaviorally_correct": false,
+      "label": "verified_but_wrong",
+      "coupling": "spec_laundering"
+    },
+    {
+      "problem": "get_first",
+      "candidate": "reference",
+      "weak_spec": [
+        "r >= s[0]"
+      ],
+      "verifies": true,
+      "behaviorally_correct": true,
+      "label": "honest_correct",
+      "coupling": "honest"
+    },
+    {
+      "problem": "get_first",
+      "candidate": "reference",
+      "weak_spec": [
+        "r <= s[0]"
+      ],
+      "verifies": true,
+      "behaviorally_correct": true,
+      "label": "honest_correct",
+      "coupling": "honest"
+    },
+    {
+      "problem": "get_first",
+      "candidate": "reference",
+      "weak_spec": [
+        "(r == s[0]) || true"
+      ],
+      "verifies": true,
+      "behaviorally_correct": true,
+      "label": "honest_correct",
+      "coupling": "honest"
+    },
+    {
+      "problem": "get_first",
+      "candidate": "trivial0",
+      "weak_spec": [
+        "(r == s[0]) || true"
+      ],
+      "verifies": true,
+      "behaviorally_correct": false,
+      "label": "verified_but_wrong",
+      "coupling": "spec_laundering"
+    },
+    {
+      "problem": "get_first",
+      "candidate": "trivial1",
+      "weak_spec": [
+        "(r == s[0]) || true"
+      ],
+      "verifies": true,
+      "behaviorally_correct": false,
+      "label": "verified_but_wrong",
+      "coupling": "spec_laundering"
+    },
+    {
+      "problem": "get_first",
+      "candidate": "trivial2",
+      "weak_spec": [
+        "(r == s[0]) || true"
+      ],
+      "verifies": true,
+      "behaviorally_correct": false,
+      "label": "verified_but_wrong",
+      "coupling": "spec_laundering"
+    }
+  ]
+}
