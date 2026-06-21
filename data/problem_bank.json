@@ -1,6 +1,6 @@
 {
   "schema_version": "0.1",
-  "description": "Seed problems for matched generation: each has a strong (reference) spec and a trusted reference implementation. Used as phi_strong for check_e and as the differential-testing oracle.",
+  "description": "Seed problems for matched generation: each has a strong (reference) spec and a trusted reference implementation. Used as phi_strong for coupling and as the differential-testing oracle.",
   "problems": [
     {
       "problem_id": "max_of_two",
@@ -9,6 +9,38 @@
       "requires": [],
       "strong_spec": ["r >= a", "r >= b", "r == a || r == b"],
       "reference_impl": "if a >= b { r := a; } else { r := b; }"
+    },
+    {
+      "problem_id": "min_of_two",
+      "problem_nl": "Return the minimum of two integers.",
+      "signature": "method Min(a: int, b: int) returns (r: int)",
+      "requires": [],
+      "strong_spec": ["r <= a", "r <= b", "r == a || r == b"],
+      "reference_impl": "if a <= b { r := a; } else { r := b; }"
+    },
+    {
+      "problem_id": "abs",
+      "problem_nl": "Return the absolute value of x.",
+      "signature": "method Abs(x: int) returns (r: int)",
+      "requires": [],
+      "strong_spec": ["r >= 0", "r == x || r == -x"],
+      "reference_impl": "if x < 0 { r := -x; } else { r := x; }"
+    },
+    {
+      "problem_id": "sum_pair",
+      "problem_nl": "Return the sum of two integers.",
+      "signature": "method SumPair(a: int, b: int) returns (r: int)",
+      "requires": [],
+      "strong_spec": ["r == a + b"],
+      "reference_impl": "r := a + b;"
+    },
+    {
+      "problem_id": "is_even",
+      "problem_nl": "Return whether n is even.",
+      "signature": "method IsEven(n: int) returns (r: bool)",
+      "requires": [],
+      "strong_spec": ["r <==> n % 2 == 0"],
+      "reference_impl": "r := n % 2 == 0;"
     },
     {
       "problem_id": "double_length",
@@ -25,6 +57,14 @@
       "requires": ["|s| > 0"],
       "strong_spec": ["r == s[0]"],
       "reference_impl": "r := s[0];"
+    },
+    {
+      "problem_id": "get_last",
+      "problem_nl": "Return the last element of s.",
+      "signature": "method GetLast(s: seq<int>) returns (r: int)",
+      "requires": ["|s| > 0"],
+      "strong_spec": ["r == s[|s| - 1]"],
+      "reference_impl": "r := s[|s| - 1];"
     }
   ]
 }
