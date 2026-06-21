@@ -1,0 +1,9 @@
+{
+  "reference_spec": [
+    "|r| == 2 * |s|"
+  ],
+  "candidate": "r := seq(2 * |s|, i => 0);",
+  "behaviorally_wrong": true,
+  "coupling": "honest",
+  "note": "incomplete reference spec -> coupling misses a verified-but-wrong impl (Family C)"
+}
