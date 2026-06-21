@@ -227,7 +227,7 @@ def _replace_method_body(
     return full[: open_idx + 1] + new_body + full[close_idx:]
 
 
-def run_check_a(file_path: Path | str, method_name: str) -> NoopResult:
+def run_trivial_sat(file_path: Path | str, method_name: str) -> NoopResult:
     """Run the trivial-impl satisfiability check on one method.
 
     Parameters

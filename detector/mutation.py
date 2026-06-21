@@ -69,7 +69,7 @@ class MutationResult:
 
 
 @dataclass
-class CheckBResult:
+class MutationKillResult:
     """Aggregated kill-score result for one method.
 
     Attributes
@@ -152,32 +152,66 @@ def _drop_conjunct(ensures: list[str]) -> list[Mutant]:
     return out
 
 
-_ROR_REPLACEMENTS = [
-    ("ror_eq_to_ge", r"==", ">="),
-    ("ror_eq_to_le", r"==", "<="),
-    ("ror_ge_to_gt", r">=", ">"),
-    ("ror_le_to_lt", r"<=", "<"),
-]
+def _mut(ensures, i, clause, token_re, targets, prefix):
+    # one mutant per (occurrence, replacement); single occurrence changed each time
+    out = []
+    for m in token_re.finditer(clause):
+        tok = m.group(1)
+        for repl in targets.get(tok, ()):
+            mc = clause[: m.start(1)] + repl + clause[m.end(1) :]
+            out.append(
+                Mutant(
+                    f"{prefix}:{tok}->{repl}@{m.start(1)}",
+                    clause,
+                    mc,
+                    ensures[:i] + [mc] + ensures[i + 1 :],
+                )
+            )
+    return out
+
+
+# relational; (?![=>]) keeps == in ==> and < in <==> out of scope
+_ROR_RE = re.compile(r"(?<![<>=!])(==|!=|<=|>=|<|>)(?![=>])")
+_ROR_TARGETS = {
+    "==": (">=", "<=", "!="),
+    "!=": ("==",),
+    "<": ("<=", ">", "=="),
+    ">": (">=", "<", "=="),
+    "<=": ("<", ">=", "=="),
+    ">=": (">", "<=", "=="),
+}
+
+_AOR_RE = re.compile(r"(?<![*/])([+*/%])(?![*/=])")
+_AOR_TARGETS = {"+": ("-", "*"), "*": ("+", "/"), "/": ("*",), "%": ("*",)}
+
+_LCR_RE = re.compile(r"(<==>|==>|&&|\|\|)")
+_LCR_TARGETS = {"&&": ("||",), "||": ("&&",), "==>": ("<==>",), "<==>": ("==>",)}
+
+_QUANT_RE = re.compile(r"\b(forall|exists)\b")
+_QUANT_TARGETS = {"forall": ("exists",), "exists": ("forall",)}
+
+_CONST_RE = re.compile(r"\b(true|false|0|1)\b")
+_CONST_TARGETS = {"true": ("false",), "false": ("true",), "0": ("1",), "1": ("0",)}
 
 
 def _ror(ensures: list[str]) -> list[Mutant]:
-    out = []
-    for i, clause in enumerate(ensures):
-        for op_name, pat, repl in _ROR_REPLACEMENTS:
-            if re.search(rf"(?<![<>=!]){pat}(?!=)", clause):
-                mutated_clause = re.sub(
-                    rf"(?<![<>=!]){pat}(?!=)", repl, clause, count=1
-                )
-                if mutated_clause != clause:
-                    out.append(
-                        Mutant(
-                            op_name,
-                            clause,
-                            mutated_clause,
-                            ensures[:i] + [mutated_clause] + ensures[i + 1 :],
-                        )
-                    )
-    return out
+    return [m for i, c in enumerate(ensures) for m in _mut(ensures, i, c, _ROR_RE, _ROR_TARGETS, "ror")]
+
+
+def _aor(ensures: list[str]) -> list[Mutant]:
+    return [m for i, c in enumerate(ensures) for m in _mut(ensures, i, c, _AOR_RE, _AOR_TARGETS, "aor")]
+
+
+def _lcr(ensures: list[str]) -> list[Mutant]:
+    return [m for i, c in enumerate(ensures) for m in _mut(ensures, i, c, _LCR_RE, _LCR_TARGETS, "lcr")]
+
+
+def _quant_swap(ensures: list[str]) -> list[Mutant]:
+    return [m for i, c in enumerate(ensures) for m in _mut(ensures, i, c, _QUANT_RE, _QUANT_TARGETS, "quant")]
+
+
+def _const(ensures: list[str]) -> list[Mutant]:
+    return [m for i, c in enumerate(ensures) for m in _mut(ensures, i, c, _CONST_RE, _CONST_TARGETS, "const")]
 
 
 def _negate(ensures: list[str]) -> list[Mutant]:
@@ -196,8 +230,16 @@ def _negate(ensures: list[str]) -> list[Mutant]:
 
 
 def all_mutants(ensures: list[str]) -> list[Mutant]:
-    """Return all mutants produced by the implemented operators."""
-    return _drop_conjunct(ensures) + _ror(ensures) + _negate(ensures)
+    """All mutants: drop-conjunct, ROR, AOR, LCR, quantifier-swap, const, negate."""
+    return (
+        _drop_conjunct(ensures)
+        + _ror(ensures)
+        + _aor(ensures)
+        + _lcr(ensures)
+        + _quant_swap(ensures)
+        + _const(ensures)
+        + _negate(ensures)
+    )
 
 
 def _splice_ensures(
@@ -217,7 +259,7 @@ def _splice_ensures(
     return "\n".join(out) + ("\n" if source.endswith("\n") else "")
 
 
-def run_check_b(file_path: Path | str, method_name: str) -> CheckBResult:
+def run_mutation(file_path: Path | str, method_name: str) -> MutationKillResult:
     """Run the mutation kill score check on one method.
 
     Parameters
@@ -227,13 +269,13 @@ def run_check_b(file_path: Path | str, method_name: str) -> CheckBResult:
 
     Returns
     -------
-    CheckBResult
+    MutationKillResult
     """
     file_path = Path(file_path)
     source = file_path.read_text(encoding="utf-8")
     ensures_lines, ensures_exprs = extract_ensures_for_method(source, method_name)
     if not ensures_exprs:
-        return CheckBResult(
+        return MutationKillResult(
             file_path=str(file_path),
             method_name=method_name,
             original_ensures=[],
@@ -254,7 +296,7 @@ def run_check_b(file_path: Path | str, method_name: str) -> CheckBResult:
             survivors.append(MutationResult(m, verifies=True))
 
     total = len(mutants)
-    return CheckBResult(
+    return MutationKillResult(
         file_path=str(file_path),
         method_name=method_name,
         original_ensures=ensures_exprs,

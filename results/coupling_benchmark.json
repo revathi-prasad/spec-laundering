@@ -1,0 +1,93 @@
+{
+  "dafny_available": true,
+  "entries": [
+    {
+      "id": "attack1_max_drop_conjunct",
+      "family": "A_weakening",
+      "verdict": "spec_laundering",
+      "dropped_D": [
+        "r == a || r == b"
+      ],
+      "V_proof": [
+        "r == a || r == b"
+      ],
+      "V_semantic": [
+        "r == a || r == b"
+      ],
+      "surgical": 1.0,
+      "foreign": []
+    },
+    {
+      "id": "attack2_doublelength_ror",
+      "family": "A_weakening",
+      "verdict": "spec_laundering",
+      "dropped_D": [
+        "|r| == 2 * |s|"
+      ],
+      "V_proof": [
+        "|r| == 2 * |s|"
+      ],
+      "V_semantic": [
+        "|r| == 2 * |s|"
+      ],
+      "surgical": 1.0,
+      "foreign": []
+    },
+    {
+      "id": "attack3_sort_narrow_quantifier",
+      "family": "A_weakening",
+      "verdict": "spec_laundering",
+      "dropped_D": [
+        "SortedFully(output)"
+      ],
+      "V_proof": [
+        "SortedFully(output)"
+      ],
+      "V_semantic": [
+        "SortedFully(output)"
+      ],
+      "surgical": 1.0,
+      "foreign": []
+    },
+    {
+      "id": "attack4_getfirst_vacuous_disjunct",
+      "family": "A_weakening",
+      "verdict": "spec_laundering",
+      "dropped_D": [
+        "r == s[0]"
+      ],
+      "V_proof": [
+        "r == s[0]"
+      ],
+      "V_semantic": [
+        "r == s[0]"
+      ],
+      "surgical": 1.0,
+      "foreign": []
+    },
+    {
+      "id": "attack5_abs_assumed_lemma",
+      "family": "B_proof",
+      "verdict": "proof_laundering",
+      "dropped_D": [],
+      "V_proof": [],
+      "V_semantic": [
+        "r == AbsValue(x)"
+      ],
+      "surgical": null,
+      "foreign": []
+    },
+    {
+      "id": "attack6_aws_digest_extern_boundary",
+      "family": "C_incomplete",
+      "verdict": "incomparable",
+      "dropped_D": [],
+      "V_proof": [],
+      "V_semantic": [],
+      "surgical": null,
+      "foreign": [
+        "input"
+      ]
+    }
+  ]
+}

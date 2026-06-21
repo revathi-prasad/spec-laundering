@@ -1,0 +1,26 @@
+[
+  {
+    "variant": "honest_strong",
+    "ensures": "r == s[0]",
+    "body": "r := s[0];",
+    "mutation_kill": 0.5,
+    "mutation_flag": false,
+    "coupling_verdict": "honest"
+  },
+  {
+    "variant": "loose_honest",
+    "ensures": "r == s[0] || true",
+    "body": "r := s[0];",
+    "mutation_kill": 0.25,
+    "mutation_flag": true,
+    "coupling_verdict": "honest"
+  },
+  {
+    "variant": "laundered",
+    "ensures": "r == s[0] || true",
+    "body": "r := 0;",
+    "mutation_kill": 0.5,
+    "mutation_flag": false,
+    "coupling_verdict": "spec_laundering"
+  }
+]

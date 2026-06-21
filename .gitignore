@@ -11,3 +11,13 @@ aws-cmpl/
 Report.pdf
 WRITEUP.docx
 reference.docx
+
+# internal development docs (kept local, not published)
+PLAN.md
+RESULTS.md
+WRITEUP.md
+structural_blindspot.md
+local_macos_ironspec_setup.md
+
+# secrets
+.env

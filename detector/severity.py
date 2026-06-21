@@ -13,24 +13,24 @@ warrant flagging; averaging would let one dimension hide another.
 
 Components
 ----------
-component_a : float in [0, 1] or None
+component_trivial : float in [0, 1] or None
     Fraction of trivial implementations from the type-driven catalog that
     satisfy the specification. None if no trivials applicable to the
     method signature (e.g., unsupported return type).
 
-component_b : float in [0, 1] or None
+component_mutation : float in [0, 1] or None
     1 - filtered_kill_score. Filtered kill score is the mutation kill
     score after equivalent-mutant filtering (check (c)). None if no
     mutants applicable (e.g., extractor failed).
 
-component_d : float in {0.0, 1.0}
+component_axiom : float in {0.0, 1.0}
     1.0 if any of assume / {:axiom} / lemma {:axiom} / {:verify false}
     patterns is present in the source; 0.0 otherwise. The check is
     syntactic and binary by construction.
 
 There is no component_c because check (c) is a filter applied to check
 (b)'s mutant denominator rather than a standalone signal channel; it
-modifies component_b in place.
+modifies component_mutation in place.
 
 Relation to prior work
 ----------------------
@@ -76,10 +76,10 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from . import check_a_noop_sat as ca
-from . import check_b_mutation_kill as cb
-from . import check_c_equiv_filter as cc
-from . import check_d_assume as cd
+from . import trivial_sat as triv
+from . import mutation as mut
+from . import equiv_filter as eqf
+from . import axiom_scan as axi
 
 
 @dataclass
@@ -90,12 +90,12 @@ class SeverityResult:
     ----------
     file_path : str
     method_name : str
-    component_a : float or None
+    component_trivial : float or None
         Normalized check (a) signal.
-    component_b : float or None
+    component_mutation : float or None
         Normalized check (b/c) signal (mutation kill, after equivalent-
         mutant filtering).
-    component_d : float
+    component_axiom : float
         Binary check (d) signal in {0.0, 1.0}.
     severity : float or None
         max over non-None components; None if all components are None.
@@ -106,31 +106,31 @@ class SeverityResult:
 
     file_path: str
     method_name: str
-    component_a: float | None
-    component_b: float | None
-    component_d: float
+    component_trivial: float | None
+    component_mutation: float | None
+    component_axiom: float
     severity: float | None = field(init=False)
     consensus: int = field(init=False)
 
     def __post_init__(self) -> None:
-        signals = [s for s in (self.component_a, self.component_b, self.component_d) if s is not None]
+        signals = [s for s in (self.component_trivial, self.component_mutation, self.component_axiom) if s is not None]
         self.severity = max(signals) if signals else None
         self.consensus = sum(1 for s in signals if s >= 0.5)
 
 
-def _component_a(a_res: ca.NoopResult) -> float | None:
+def _component_trivial(a_res: triv.NoopResult) -> float | None:
     if a_res.trivial_impls_tried == 0:
         return None
     return len(a_res.satisfying_impls) / a_res.trivial_impls_tried
 
 
-def _component_b(c_res: cc.FilteredKillResult) -> float | None:
+def _component_mutation(c_res: eqf.FilteredKillResult) -> float | None:
     if c_res.filtered_tried == 0:
         return None
     return 1.0 - c_res.filtered_kill_score
 
 
-def _component_d(d_res: cd.CheckDResult) -> float:
+def _component_axiom(d_res: axi.AxiomScanResult) -> float:
     return 1.0 if d_res.flagged else 0.0
 
 
@@ -149,14 +149,14 @@ def compute_severity(file_path: Path | str, method_name: str) -> SeverityResult:
     SeverityResult
     """
     file_path = Path(file_path)
-    a_res = ca.run_check_a(file_path, method_name)
-    b_res = cb.run_check_b(file_path, method_name)
-    c_res = cc.run_check_c(file_path, method_name, raw_result=b_res)
-    d_res = cd.scan_file(file_path)
+    a_res = triv.run_trivial_sat(file_path, method_name)
+    b_res = mut.run_mutation(file_path, method_name)
+    c_res = eqf.run_equiv_filter(file_path, method_name, raw_result=b_res)
+    d_res = axi.scan_file(file_path)
     return SeverityResult(
         file_path=str(file_path),
         method_name=method_name,
-        component_a=_component_a(a_res),
-        component_b=_component_b(c_res),
-        component_d=_component_d(d_res),
+        component_trivial=_component_trivial(a_res),
+        component_mutation=_component_mutation(c_res),
+        component_axiom=_component_axiom(d_res),
     )

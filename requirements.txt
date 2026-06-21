@@ -1,0 +1,10 @@
+# Python 3.11+ standard library only — no third-party runtime dependencies.
+#
+# External (not pip-installable):
+#   Dafny 4.11.0 — install via: bash scripts/setup_dafny.sh
+#
+# Tests:
+#   python3 -m unittest discover -s tests
+#
+# Optional (planned LLM-judge baseline only; not required to run the detector):
+#   deepeval>=2.0

@@ -31,8 +31,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from . import dafny
-from .check_b_mutation_kill import (
-    CheckBResult,
+from .mutation import (
+    MutationKillResult,
     Mutant,
     all_mutants,
     extract_ensures_for_method,
@@ -63,7 +63,7 @@ class FilteredKillResult:
 
     Attributes
     ----------
-    raw : CheckBResult
+    raw : MutationKillResult
         Unfiltered check (d) result for reference.
     equivalences : list of EquivResult
         One per mutant tested for equivalence.
@@ -78,7 +78,7 @@ class FilteredKillResult:
     filtered_kill_score : float
     """
 
-    raw: CheckBResult
+    raw: MutationKillResult
     equivalences: list[EquivResult] = field(default_factory=list)
     equivalent_count: int = 0
     indeterminate_count: int = 0
@@ -204,8 +204,8 @@ def _equivalent_under_dafny(
     return False, False
 
 
-def run_check_c(
-    file_path: Path | str, method_name: str, raw_result: CheckBResult | None = None
+def run_equiv_filter(
+    file_path: Path | str, method_name: str, raw_result: MutationKillResult | None = None
 ) -> FilteredKillResult:
     """Filter equivalent mutants from a kill-score computation.
 
@@ -213,7 +213,7 @@ def run_check_c(
     ----------
     file_path : Path or str
     method_name : str
-    raw_result : CheckBResult, optional
+    raw_result : MutationKillResult, optional
         Pre-computed check (b) result for the same method. If omitted, the
         function reproduces the mutant set and verification map.
 
@@ -227,7 +227,7 @@ def run_check_c(
     if not ensures_exprs:
         return FilteredKillResult(
             raw=raw_result
-            or CheckBResult(
+            or MutationKillResult(
                 file_path=str(file_path),
                 method_name=method_name,
                 original_ensures=[],
@@ -237,10 +237,10 @@ def run_check_c(
         )
 
     if raw_result is None:
-        # Avoid a circular import; reach into check_d directly.
-        from . import check_b_mutation_kill as cb
+        # Avoid a circular import; reach into axiom_scan directly.
+        from . import mutation as mut
 
-        raw_result = cb.run_check_b(file_path, method_name)
+        raw_result = mut.run_mutation(file_path, method_name)
 
     extras = _extract_supporting_decls(source, method_name)
     sig_vars = _collect_variables(source, method_name)

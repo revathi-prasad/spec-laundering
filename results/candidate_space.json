@@ -1,0 +1,101 @@
+{
+  "problems": [
+    {
+      "problem_id": "max_of_two",
+      "strong_spec": [
+        "r >= a",
+        "r >= b",
+        "r == a || r == b"
+      ],
+      "num_candidates": 10,
+      "candidate_weak_specs": [
+        [
+          "r >= b",
+          "r == a || r == b"
+        ],
+        [
+          "r >= a",
+          "r == a || r == b"
+        ],
+        [
+          "r >= a",
+          "r >= b"
+        ],
+        [
+          "r >= a",
+          "r >= b",
+          "r >= a || r == b"
+        ],
+        [
+          "r >= a",
+          "r >= b",
+          "r <= a || r == b"
+        ],
+        [
+          "r >= a",
+          "r >= b",
+          "r == a || r >= b"
+        ],
+        [
+          "r >= a",
+          "r >= b",
+          "r == a || r <= b"
+        ],
+        [
+          "(r >= a) || true",
+          "r >= b",
+          "r == a || r == b"
+        ],
+        [
+          "r >= a",
+          "(r >= b) || true",
+          "r == a || r == b"
+        ],
+        [
+          "r >= a",
+          "r >= b",
+          "(r == a || r == b) || true"
+        ]
+      ]
+    },
+    {
+      "problem_id": "double_length",
+      "strong_spec": [
+        "|r| == 2 * |s|"
+      ],
+      "num_candidates": 4,
+      "candidate_weak_specs": [
+        [],
+        [
+          "|r| >= 2 * |s|"
+        ],
+        [
+          "|r| <= 2 * |s|"
+        ],
+        [
+          "(|r| == 2 * |s|) || true"
+        ]
+      ]
+    },
+    {
+      "problem_id": "get_first",
+      "strong_spec": [
+        "r == s[0]"
+      ],
+      "num_candidates": 4,
+      "candidate_weak_specs": [
+        [],
+        [
+          "r >= s[0]"
+        ],
+        [
+          "r <= s[0]"
+        ],
+        [
+          "(r == s[0]) || true"
+        ]
+      ]
+    }
+  ],
+  "total_candidates": 18
+}
