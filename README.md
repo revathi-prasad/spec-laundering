@@ -128,4 +128,4 @@ Python 3.11+ standard library only; the checks shell out to the `dafny` CLI.
 
 ## License
 
-[ to be added ]
+MIT — see [LICENSE](LICENSE).
