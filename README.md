@@ -75,6 +75,9 @@ severity score:
 - **Internal ablation** (`scripts/ablation.py` → `results/ablation.json`):
   coupling accuracy **1.00**; the `mutation` baseline reaches **0.56** at its
   best calibrated threshold (no usable discrimination).
+- **LLM-judge foil** (`scripts/run_llm_judge.py` → `results/llm_judge.json`):
+  a semantic judge reaches **0.93** (TPR 0.85, FPR 0.0) — strong but
+  non-deterministic, missing 6/41 including blatant cases coupling catches.
 - **Boundary** (`scripts/family_c_demo.py` → `results/family_c_demo.json`):
   coupling is only as sound as the reference. Under an incomplete spec
   (`|r| == 2*|s|`, length only) a right-length/wrong-content impl is rated
