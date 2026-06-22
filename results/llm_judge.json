@@ -1,0 +1,507 @@
+{
+  "summary": {
+    "n_scored": 82,
+    "skipped": 0,
+    "accuracy": 0.927,
+    "tpr": 0.854,
+    "fpr": 0.0,
+    "tp": 35,
+    "fp": 0,
+    "tn": 41,
+    "fn": 6
+  },
+  "records": [
+    {
+      "problem": "max_of_two",
+      "candidate": "reference",
+      "label": "honest_correct",
+      "llm_judge": "correct"
+    },
+    {
+      "problem": "max_of_two",
+      "candidate": "reference",
+      "label": "honest_correct",
+      "llm_judge": "correct"
+    },
+    {
+      "problem": "max_of_two",
+      "candidate": "reference",
+      "label": "honest_correct",
+      "llm_judge": "correct"
+    },
+    {
+      "problem": "max_of_two",
+      "candidate": "trivial3",
+      "label": "verified_but_wrong",
+      "llm_judge": "wrong"
+    },
+    {
+      "problem": "max_of_two",
+      "candidate": "reference",
+      "label": "honest_correct",
+      "llm_judge": "correct"
+    },
+    {
+      "problem": "max_of_two",
+      "candidate": "reference",
+      "label": "honest_correct",
+      "llm_judge": "correct"
+    },
+    {
+      "problem": "max_of_two",
+      "candidate": "reference",
+      "label": "honest_correct",
+      "llm_judge": "correct"
+    },
+    {
+      "problem": "min_of_two",
+      "candidate": "reference",
+      "label": "honest_correct",
+      "llm_judge": "correct"
+    },
+    {
+      "problem": "min_of_two",
+      "candidate": "reference",
+      "label": "honest_correct",
+      "llm_judge": "correct"
+    },
+    {
+      "problem": "min_of_two",
+      "candidate": "reference",
+      "label": "honest_correct",
+      "llm_judge": "correct"
+    },
+    {
+      "problem": "min_of_two",
+      "candidate": "trivial3",
+      "label": "verified_but_wrong",
+      "llm_judge": "wrong"
+    },
+    {
+      "problem": "min_of_two",
+      "candidate": "reference",
+      "label": "honest_correct",
+      "llm_judge": "correct"
+    },
+    {
+      "problem": "min_of_two",
+      "candidate": "reference",
+      "label": "honest_correct",
+      "llm_judge": "correct"
+    },
+    {
+      "problem": "min_of_two",
+      "candidate": "reference",
+      "label": "honest_correct",
+      "llm_judge": "correct"
+    },
+    {
+      "problem": "abs",
+      "candidate": "reference",
+      "label": "honest_correct",
+      "llm_judge": "correct"
+    },
+    {
+      "problem": "abs",
+      "candidate": "reference",
+      "label": "honest_correct",
+      "llm_judge": "correct"
+    },
+    {
+      "problem": "abs",
+      "candidate": "trivial3",
+      "label": "verified_but_wrong",
+      "llm_judge": "correct"
+    },
+    {
+      "problem": "abs",
+      "candidate": "reference",
+      "label": "honest_correct",
+      "llm_judge": "correct"
+    },
+    {
+      "problem": "abs",
+      "candidate": "trivial0",
+      "label": "verified_but_wrong",
+      "llm_judge": "wrong"
+    },
+    {
+      "problem": "abs",
+      "candidate": "trivial1",
+      "label": "verified_but_wrong",
+      "llm_judge": "wrong"
+    },
+    {
+      "problem": "abs",
+      "candidate": "reference",
+      "label": "honest_correct",
+      "llm_judge": "correct"
+    },
+    {
+      "problem": "abs",
+      "candidate": "reference",
+      "label": "honest_correct",
+      "llm_judge": "correct"
+    },
+    {
+      "problem": "abs",
+      "candidate": "reference",
+      "label": "honest_correct",
+      "llm_judge": "correct"
+    },
+    {
+      "problem": "sum_pair",
+      "candidate": "reference",
+      "label": "honest_correct",
+      "llm_judge": "correct"
+    },
+    {
+      "problem": "sum_pair",
+      "candidate": "reference",
+      "label": "honest_correct",
+      "llm_judge": "correct"
+    },
+    {
+      "problem": "sum_pair",
+      "candidate": "trivial0",
+      "label": "verified_but_wrong",
+      "llm_judge": "wrong"
+    },
+    {
+      "problem": "sum_pair",
+      "candidate": "trivial1",
+      "label": "verified_but_wrong",
+      "llm_judge": "wrong"
+    },
+    {
+      "problem": "sum_pair",
+      "candidate": "trivial2",
+      "label": "verified_but_wrong",
+      "llm_judge": "wrong"
+    },
+    {
+      "problem": "sum_pair",
+      "candidate": "trivial3",
+      "label": "verified_but_wrong",
+      "llm_judge": "wrong"
+    },
+    {
+      "problem": "sum_pair",
+      "candidate": "reference",
+      "label": "honest_correct",
+      "llm_judge": "correct"
+    },
+    {
+      "problem": "sum_pair",
+      "candidate": "reference",
+      "label": "honest_correct",
+      "llm_judge": "correct"
+    },
+    {
+      "problem": "sum_pair",
+      "candidate": "reference",
+      "label": "honest_correct",
+      "llm_judge": "correct"
+    },
+    {
+      "problem": "sum_pair",
+      "candidate": "trivial0",
+      "label": "verified_but_wrong",
+      "llm_judge": "wrong"
+    },
+    {
+      "problem": "sum_pair",
+      "candidate": "trivial1",
+      "label": "verified_but_wrong",
+      "llm_judge": "wrong"
+    },
+    {
+      "problem": "sum_pair",
+      "candidate": "trivial2",
+      "label": "verified_but_wrong",
+      "llm_judge": "wrong"
+    },
+    {
+      "problem": "sum_pair",
+      "candidate": "trivial3",
+      "label": "verified_but_wrong",
+      "llm_judge": "wrong"
+    },
+    {
+      "problem": "is_even",
+      "candidate": "reference",
+      "label": "honest_correct",
+      "llm_judge": "correct"
+    },
+    {
+      "problem": "is_even",
+      "candidate": "reference",
+      "label": "honest_correct",
+      "llm_judge": "correct"
+    },
+    {
+      "problem": "is_even",
+      "candidate": "trivial0",
+      "label": "verified_but_wrong",
+      "llm_judge": "wrong"
+    },
+    {
+      "problem": "is_even",
+      "candidate": "trivial1",
+      "label": "verified_but_wrong",
+      "llm_judge": "wrong"
+    },
+    {
+      "problem": "is_even",
+      "candidate": "trivial0",
+      "label": "verified_but_wrong",
+      "llm_judge": "correct"
+    },
+    {
+      "problem": "is_even",
+      "candidate": "reference",
+      "label": "honest_correct",
+      "llm_judge": "correct"
+    },
+    {
+      "problem": "is_even",
+      "candidate": "reference",
+      "label": "honest_correct",
+      "llm_judge": "correct"
+    },
+    {
+      "problem": "is_even",
+      "candidate": "trivial0",
+      "label": "verified_but_wrong",
+      "llm_judge": "wrong"
+    },
+    {
+      "problem": "is_even",
+      "candidate": "trivial1",
+      "label": "verified_but_wrong",
+      "llm_judge": "wrong"
+    },
+    {
+      "problem": "double_length",
+      "candidate": "reference",
+      "label": "honest_correct",
+      "llm_judge": "correct"
+    },
+    {
+      "problem": "double_length",
+      "candidate": "reference",
+      "label": "honest_correct",
+      "llm_judge": "correct"
+    },
+    {
+      "problem": "double_length",
+      "candidate": "trivial0",
+      "label": "verified_but_wrong",
+      "llm_judge": "wrong"
+    },
+    {
+      "problem": "double_length",
+      "candidate": "trivial1",
+      "label": "verified_but_wrong",
+      "llm_judge": "wrong"
+    },
+    {
+      "problem": "double_length",
+      "candidate": "trivial2",
+      "label": "verified_but_wrong",
+      "llm_judge": "wrong"
+    },
+    {
+      "problem": "double_length",
+      "candidate": "trivial3",
+      "label": "verified_but_wrong",
+      "llm_judge": "wrong"
+    },
+    {
+      "problem": "double_length",
+      "candidate": "reference",
+      "label": "honest_correct",
+      "llm_judge": "correct"
+    },
+    {
+      "problem": "double_length",
+      "candidate": "trivial0",
+      "label": "verified_but_wrong",
+      "llm_judge": "wrong"
+    },
+    {
+      "problem": "double_length",
+      "candidate": "trivial1",
+      "label": "verified_but_wrong",
+      "llm_judge": "wrong"
+    },
+    {
+      "problem": "double_length",
+      "candidate": "trivial2",
+      "label": "verified_but_wrong",
+      "llm_judge": "wrong"
+    },
+    {
+      "problem": "double_length",
+      "candidate": "reference",
+      "label": "honest_correct",
+      "llm_judge": "correct"
+    },
+    {
+      "problem": "double_length",
+      "candidate": "trivial0",
+      "label": "verified_but_wrong",
+      "llm_judge": "wrong"
+    },
+    {
+      "problem": "double_length",
+      "candidate": "trivial1",
+      "label": "verified_but_wrong",
+      "llm_judge": "wrong"
+    },
+    {
+      "problem": "double_length",
+      "candidate": "trivial2",
+      "label": "verified_but_wrong",
+      "llm_judge": "wrong"
+    },
+    {
+      "problem": "double_length",
+      "candidate": "trivial3",
+      "label": "verified_but_wrong",
+      "llm_judge": "wrong"
+    },
+    {
+      "problem": "get_first",
+      "candidate": "reference",
+      "label": "honest_correct",
+      "llm_judge": "correct"
+    },
+    {
+      "problem": "get_first",
+      "candidate": "reference",
+      "label": "honest_correct",
+      "llm_judge": "correct"
+    },
+    {
+      "problem": "get_first",
+      "candidate": "trivial0",
+      "label": "verified_but_wrong",
+      "llm_judge": "wrong"
+    },
+    {
+      "problem": "get_first",
+      "candidate": "trivial1",
+      "label": "verified_but_wrong",
+      "llm_judge": "wrong"
+    },
+    {
+      "problem": "get_first",
+      "candidate": "trivial2",
+      "label": "verified_but_wrong",
+      "llm_judge": "wrong"
+    },
+    {
+      "problem": "get_first",
+      "candidate": "reference",
+      "label": "honest_correct",
+      "llm_judge": "correct"
+    },
+    {
+      "problem": "get_first",
+      "candidate": "reference",
+      "label": "honest_correct",
+      "llm_judge": "correct"
+    },
+    {
+      "problem": "get_first",
+      "candidate": "reference",
+      "label": "honest_correct",
+      "llm_judge": "correct"
+    },
+    {
+      "problem": "get_first",
+      "candidate": "trivial0",
+      "label": "verified_but_wrong",
+      "llm_judge": "correct"
+    },
+    {
+      "problem": "get_first",
+      "candidate": "trivial1",
+      "label": "verified_but_wrong",
+      "llm_judge": "wrong"
+    },
+    {
+      "problem": "get_first",
+      "candidate": "trivial2",
+      "label": "verified_but_wrong",
+      "llm_judge": "correct"
+    },
+    {
+      "problem": "get_last",
+      "candidate": "reference",
+      "label": "honest_correct",
+      "llm_judge": "correct"
+    },
+    {
+      "problem": "get_last",
+      "candidate": "reference",
+      "label": "honest_correct",
+      "llm_judge": "correct"
+    },
+    {
+      "problem": "get_last",
+      "candidate": "trivial0",
+      "label": "verified_but_wrong",
+      "llm_judge": "wrong"
+    },
+    {
+      "problem": "get_last",
+      "candidate": "trivial1",
+      "label": "verified_but_wrong",
+      "llm_judge": "wrong"
+    },
+    {
+      "problem": "get_last",
+      "candidate": "trivial2",
+      "label": "verified_but_wrong",
+      "llm_judge": "wrong"
+    },
+    {
+      "problem": "get_last",
+      "candidate": "reference",
+      "label": "honest_correct",
+      "llm_judge": "correct"
+    },
+    {
+      "problem": "get_last",
+      "candidate": "reference",
+      "label": "honest_correct",
+      "llm_judge": "correct"
+    },
+    {
+      "problem": "get_last",
+      "candidate": "reference",
+      "label": "honest_correct",
+      "llm_judge": "correct"
+    },
+    {
+      "problem": "get_last",
+      "candidate": "trivial0",
+      "label": "verified_but_wrong",
+      "llm_judge": "correct"
+    },
+    {
+      "problem": "get_last",
+      "candidate": "trivial1",
+      "label": "verified_but_wrong",
+      "llm_judge": "wrong"
+    },
+    {
+      "problem": "get_last",
+      "candidate": "trivial2",
+      "label": "verified_but_wrong",
+      "llm_judge": "correct"
+    }
+  ]
+}
