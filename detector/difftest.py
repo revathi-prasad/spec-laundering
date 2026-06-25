@@ -14,10 +14,12 @@ from pathlib import Path
 
 _SIG = re.compile(r"method\s+(\w+)\s*\(([^)]*)\)\s*returns\s*\(([^)]*)\)")
 _POOL = {
-    "int": ["0", "1", "-1", "5", "2"],
-    "nat": ["0", "1", "2", "5"],
+    "int": ["0", "1", "-1", "5", "2", "10", "-7"],
+    "nat": ["0", "1", "2", "5", "10"],
     "bool": ["true", "false"],
 }
+# all seqs non-empty so a `requires |s| > 0` precondition never blocks the run
+_SEQ_POOL = ["[1]", "[1, 2, 3]", "[3, 1, 2]", "[5, 4, 3, 2, 1]", "[2, 2]"]
 
 
 def _params(s: str) -> list[tuple[str, str]]:
@@ -35,7 +37,7 @@ def _pool(ty: str) -> list[str] | None:
     if ty in _POOL:
         return _POOL[ty]
     if ty.startswith("seq<"):
-        return ["[1]", "[1, 2, 3]", "[3, 1, 2]"]
+        return _SEQ_POOL
     return None
 
 
@@ -54,7 +56,7 @@ def build_harness(signature, requires, ref_impl, cand_impl, inputs) -> str:
     for args in inputs:
         blocks.append(
             "  { var r := Ref(" + args + "); var c := Cand(" + args + ");"
-            ' if r != c { print "MISMATCH\\n"; } }'
+            ' if r != c { print "MISMATCH in=(' + args + ') ref=", r, " cand=", c, "\\n"; } }'
         )
     body = "\n".join(blocks)
     return (
@@ -78,15 +80,27 @@ def _dafny_run(src: str) -> tuple[int, str]:
         return proc.returncode, proc.stdout
 
 
-def differential_test(signature, requires, ref_impl, cand_impl, _run=None) -> bool | None:
-    """True = behaviorally wrong, False = matches reference, None = inconclusive
-    (unsupported types or did not run)."""
+def find_counterexamples(signature, requires, ref_impl, cand_impl, _run=None):
+    """Compare cand_impl against ref_impl on generated inputs.
+
+    Returns (status, examples):
+      status   'regression' | 'equivalent' | 'inconclusive'
+      examples list of mismatch lines (input + both outputs).
+    """
     params = _params(_SIG.search(signature).group(2))
     inputs = gen_inputs(params)
     if not inputs:
-        return None
+        return "inconclusive", []
     src = build_harness(signature, requires, ref_impl, cand_impl, inputs)
     rc, out = (_run or _dafny_run)(src)
     if rc != 0:
-        return None
-    return "MISMATCH" in out
+        return "inconclusive", []
+    examples = [ln for ln in out.splitlines() if ln.startswith("MISMATCH")]
+    return ("regression" if examples else "equivalent"), examples
+
+
+def differential_test(signature, requires, ref_impl, cand_impl, _run=None) -> bool | None:
+    """True = behaviorally wrong, False = matches reference, None = inconclusive
+    (unsupported types or did not run)."""
+    status, _ = find_counterexamples(signature, requires, ref_impl, cand_impl, _run)
+    return {"regression": True, "equivalent": False, "inconclusive": None}[status]

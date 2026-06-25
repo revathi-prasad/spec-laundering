@@ -87,6 +87,23 @@ severity score:
 weakening); it is a confirmation of soundness on the modeled family, not a claim
 of general coverage. Family C remains the open boundary.
 
+## Migration mode (reference-free)
+
+When a trusted prior implementation exists (a refactor, a port, an LLM rewrite),
+the old code *is* the reference — a total function — so no spec is needed.
+`detector/migrate.py` runs the new impl against the old one on generated inputs
+(`dafny run --target:py`) and reports the diverging inputs.
+
+- `scripts/run_migration.py` → `results/migration_demo.json`: 8/8 old-vs-old
+  sanity checks `equivalent`; 23/23 type-trivial rewrites flagged `regression`
+  with counterexamples (e.g. `Max` rewritten to `r := 0;` → `in=(0, 1) ref=1 cand=0`).
+
+This is the deployable counterpart to `coupling`: `coupling` attributes a
+*spec* weakening (needs `φ_strong`); migration detects a *behavioral* one (needs
+the old impl). A reference impl is total and degrades more gracefully than a
+reference spec, which is why an incomplete spec is `coupling`'s boundary
+(Family C) but migration has no analogous blind spot.
+
 ## Reproduce
 
 ```bash
@@ -97,15 +114,17 @@ python3 scripts/run_control.py             # uncoupled control
 python3 scripts/build_dataset.py           # labeled dataset (slow; real Dafny)
 python3 scripts/ablation.py                # coupling vs mutation
 python3 scripts/family_c_demo.py           # Family-C boundary
+python3 scripts/run_migration.py           # reference-free migration mode
 ```
 
 Python 3.11+ standard library only; the checks shell out to the `dafny` CLI.
 
 ## Limitations
 
-- **Needs a reference spec.** `coupling` requires `φ_strong`; a reference-free
-  deployment version (using an independent spec or differential testing as the
-  reference) is not built.
+- **`coupling` needs a reference spec.** It requires `φ_strong`. The
+  reference-free path is migration mode (above), which instead needs a trusted
+  prior implementation; neither covers the case where you have only a fresh,
+  possibly-incomplete spec and no reference at all.
 - **Family C.** An incomplete reference spec is `coupling`'s soundness boundary
   (demonstrated above).
 - **Scale and scope.** N=82 over 8 seed problems with simple types; not yet run

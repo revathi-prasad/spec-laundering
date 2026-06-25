@@ -1,0 +1,310 @@
+{
+  "summary": {
+    "regressions": 23,
+    "equivalent": 0,
+    "inconclusive": 0
+  },
+  "records": [
+    {
+      "problem": "max_of_two",
+      "new": "reference",
+      "status": "equivalent",
+      "counterexamples": []
+    },
+    {
+      "problem": "max_of_two",
+      "new": "trivial0",
+      "body": "r := 0;",
+      "status": "regression",
+      "counterexamples": [
+        "MISMATCH in=(0, 1) ref=1 cand=0",
+        "MISMATCH in=(0, 5) ref=5 cand=0",
+        "MISMATCH in=(0, 2) ref=2 cand=0"
+      ]
+    },
+    {
+      "problem": "max_of_two",
+      "new": "trivial1",
+      "body": "r := 1;",
+      "status": "regression",
+      "counterexamples": [
+        "MISMATCH in=(0, 0) ref=0 cand=1",
+        "MISMATCH in=(0, -1) ref=0 cand=1",
+        "MISMATCH in=(0, 5) ref=5 cand=1"
+      ]
+    },
+    {
+      "problem": "max_of_two",
+      "new": "trivial2",
+      "body": "r := -1;",
+      "status": "regression",
+      "counterexamples": [
+        "MISMATCH in=(0, 0) ref=0 cand=-1",
+        "MISMATCH in=(0, 1) ref=1 cand=-1",
+        "MISMATCH in=(0, -1) ref=0 cand=-1"
+      ]
+    },
+    {
+      "problem": "min_of_two",
+      "new": "reference",
+      "status": "equivalent",
+      "counterexamples": []
+    },
+    {
+      "problem": "min_of_two",
+      "new": "trivial0",
+      "body": "r := 0;",
+      "status": "regression",
+      "counterexamples": [
+        "MISMATCH in=(0, -1) ref=-1 cand=0",
+        "MISMATCH in=(0, -7) ref=-7 cand=0",
+        "MISMATCH in=(1, 1) ref=1 cand=0"
+      ]
+    },
+    {
+      "problem": "min_of_two",
+      "new": "trivial1",
+      "body": "r := 1;",
+      "status": "regression",
+      "counterexamples": [
+        "MISMATCH in=(0, 0) ref=0 cand=1",
+        "MISMATCH in=(0, 1) ref=0 cand=1",
+        "MISMATCH in=(0, -1) ref=-1 cand=1"
+      ]
+    },
+    {
+      "problem": "min_of_two",
+      "new": "trivial2",
+      "body": "r := -1;",
+      "status": "regression",
+      "counterexamples": [
+        "MISMATCH in=(0, 0) ref=0 cand=-1",
+        "MISMATCH in=(0, 1) ref=0 cand=-1",
+        "MISMATCH in=(0, 5) ref=0 cand=-1"
+      ]
+    },
+    {
+      "problem": "abs",
+      "new": "reference",
+      "status": "equivalent",
+      "counterexamples": []
+    },
+    {
+      "problem": "abs",
+      "new": "trivial0",
+      "body": "r := 0;",
+      "status": "regression",
+      "counterexamples": [
+        "MISMATCH in=(1) ref=1 cand=0",
+        "MISMATCH in=(-1) ref=1 cand=0",
+        "MISMATCH in=(5) ref=5 cand=0"
+      ]
+    },
+    {
+      "problem": "abs",
+      "new": "trivial1",
+      "body": "r := 1;",
+      "status": "regression",
+      "counterexamples": [
+        "MISMATCH in=(0) ref=0 cand=1",
+        "MISMATCH in=(5) ref=5 cand=1",
+        "MISMATCH in=(2) ref=2 cand=1"
+      ]
+    },
+    {
+      "problem": "abs",
+      "new": "trivial2",
+      "body": "r := -1;",
+      "status": "regression",
+      "counterexamples": [
+        "MISMATCH in=(0) ref=0 cand=-1",
+        "MISMATCH in=(1) ref=1 cand=-1",
+        "MISMATCH in=(-1) ref=1 cand=-1"
+      ]
+    },
+    {
+      "problem": "sum_pair",
+      "new": "reference",
+      "status": "equivalent",
+      "counterexamples": []
+    },
+    {
+      "problem": "sum_pair",
+      "new": "trivial0",
+      "body": "r := 0;",
+      "status": "regression",
+      "counterexamples": [
+        "MISMATCH in=(0, 1) ref=1 cand=0",
+        "MISMATCH in=(0, -1) ref=-1 cand=0",
+        "MISMATCH in=(0, 5) ref=5 cand=0"
+      ]
+    },
+    {
+      "problem": "sum_pair",
+      "new": "trivial1",
+      "body": "r := 1;",
+      "status": "regression",
+      "counterexamples": [
+        "MISMATCH in=(0, 0) ref=0 cand=1",
+        "MISMATCH in=(0, -1) ref=-1 cand=1",
+        "MISMATCH in=(0, 5) ref=5 cand=1"
+      ]
+    },
+    {
+      "problem": "sum_pair",
+      "new": "trivial2",
+      "body": "r := -1;",
+      "status": "regression",
+      "counterexamples": [
+        "MISMATCH in=(0, 0) ref=0 cand=-1",
+        "MISMATCH in=(0, 1) ref=1 cand=-1",
+        "MISMATCH in=(0, 5) ref=5 cand=-1"
+      ]
+    },
+    {
+      "problem": "is_even",
+      "new": "reference",
+      "status": "equivalent",
+      "counterexamples": []
+    },
+    {
+      "problem": "is_even",
+      "new": "trivial0",
+      "body": "r := true;",
+      "status": "regression",
+      "counterexamples": [
+        "MISMATCH in=(1) ref=false cand=true",
+        "MISMATCH in=(-1) ref=false cand=true",
+        "MISMATCH in=(5) ref=false cand=true"
+      ]
+    },
+    {
+      "problem": "is_even",
+      "new": "trivial1",
+      "body": "r := false;",
+      "status": "regression",
+      "counterexamples": [
+        "MISMATCH in=(0) ref=true cand=false",
+        "MISMATCH in=(2) ref=true cand=false",
+        "MISMATCH in=(10) ref=true cand=false"
+      ]
+    },
+    {
+      "problem": "double_length",
+      "new": "reference",
+      "status": "equivalent",
+      "counterexamples": []
+    },
+    {
+      "problem": "double_length",
+      "new": "trivial0",
+      "body": "r := [];",
+      "status": "regression",
+      "counterexamples": [
+        "MISMATCH in=([1]) ref=[1, 1] cand=[]",
+        "MISMATCH in=([1, 2, 3]) ref=[1, 2, 3, 1, 2, 3] cand=[]",
+        "MISMATCH in=([3, 1, 2]) ref=[3, 1, 2, 3, 1, 2] cand=[]"
+      ]
+    },
+    {
+      "problem": "double_length",
+      "new": "trivial1",
+      "body": "r := s;",
+      "status": "regression",
+      "counterexamples": [
+        "MISMATCH in=([1]) ref=[1, 1] cand=[1]",
+        "MISMATCH in=([1, 2, 3]) ref=[1, 2, 3, 1, 2, 3] cand=[1, 2, 3]",
+        "MISMATCH in=([3, 1, 2]) ref=[3, 1, 2, 3, 1, 2] cand=[3, 1, 2]"
+      ]
+    },
+    {
+      "problem": "double_length",
+      "new": "trivial2",
+      "body": "r := seq(0, i => 0);",
+      "status": "regression",
+      "counterexamples": [
+        "MISMATCH in=([1]) ref=[1, 1] cand=[]",
+        "MISMATCH in=([1, 2, 3]) ref=[1, 2, 3, 1, 2, 3] cand=[]",
+        "MISMATCH in=([3, 1, 2]) ref=[3, 1, 2, 3, 1, 2] cand=[]"
+      ]
+    },
+    {
+      "problem": "get_first",
+      "new": "reference",
+      "status": "equivalent",
+      "counterexamples": []
+    },
+    {
+      "problem": "get_first",
+      "new": "trivial0",
+      "body": "r := 0;",
+      "status": "regression",
+      "counterexamples": [
+        "MISMATCH in=([1]) ref=1 cand=0",
+        "MISMATCH in=([1, 2, 3]) ref=1 cand=0",
+        "MISMATCH in=([3, 1, 2]) ref=3 cand=0"
+      ]
+    },
+    {
+      "problem": "get_first",
+      "new": "trivial1",
+      "body": "r := 1;",
+      "status": "regression",
+      "counterexamples": [
+        "MISMATCH in=([3, 1, 2]) ref=3 cand=1",
+        "MISMATCH in=([5, 4, 3, 2, 1]) ref=5 cand=1",
+        "MISMATCH in=([2, 2]) ref=2 cand=1"
+      ]
+    },
+    {
+      "problem": "get_first",
+      "new": "trivial2",
+      "body": "r := -1;",
+      "status": "regression",
+      "counterexamples": [
+        "MISMATCH in=([1]) ref=1 cand=-1",
+        "MISMATCH in=([1, 2, 3]) ref=1 cand=-1",
+        "MISMATCH in=([3, 1, 2]) ref=3 cand=-1"
+      ]
+    },
+    {
+      "problem": "get_last",
+      "new": "reference",
+      "status": "equivalent",
+      "counterexamples": []
+    },
+    {
+      "problem": "get_last",
+      "new": "trivial0",
+      "body": "r := 0;",
+      "status": "regression",
+      "counterexamples": [
+        "MISMATCH in=([1]) ref=1 cand=0",
+        "MISMATCH in=([1, 2, 3]) ref=3 cand=0",
+        "MISMATCH in=([3, 1, 2]) ref=2 cand=0"
+      ]
+    },
+    {
+      "problem": "get_last",
+      "new": "trivial1",
+      "body": "r := 1;",
+      "status": "regression",
+      "counterexamples": [
+        "MISMATCH in=([1, 2, 3]) ref=3 cand=1",
+        "MISMATCH in=([3, 1, 2]) ref=2 cand=1",
+        "MISMATCH in=([2, 2]) ref=2 cand=1"
+      ]
+    },
+    {
+      "problem": "get_last",
+      "new": "trivial2",
+      "body": "r := -1;",
+      "status": "regression",
+      "counterexamples": [
+        "MISMATCH in=([1]) ref=1 cand=-1",
+        "MISMATCH in=([1, 2, 3]) ref=3 cand=-1",
+        "MISMATCH in=([3, 1, 2]) ref=2 cand=-1"
+      ]
+    }
+  ]
+}

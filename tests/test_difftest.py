@@ -15,7 +15,7 @@ class TestInputs(unittest.TestCase):
         self.assertEqual(25, len(ins))
 
     def test_seq_inputs(self):
-        self.assertEqual(["[1]", "[1, 2, 3]", "[3, 1, 2]"], dt.gen_inputs([("s", "seq<int>")]))
+        self.assertEqual(dt._SEQ_POOL, dt.gen_inputs([("s", "seq<int>")]))
 
     def test_unsupported_type_empty(self):
         self.assertEqual([], dt.gen_inputs([("m", "map<int,int>")]))
@@ -63,6 +63,30 @@ class TestDifferentialTest(unittest.TestCase):
             _run=lambda src: (1, ""),
         )
         self.assertIsNone(res)
+
+
+class TestCounterexamples(unittest.TestCase):
+    def test_regression_returns_lines(self):
+        status, ex = dt.find_counterexamples(
+            "method Max(a: int, b: int) returns (r: int)", [], "x", "y",
+            _run=lambda src: (0, "MISMATCH in=(5, 2) ref=5 cand=3\n"),
+        )
+        self.assertEqual("regression", status)
+        self.assertEqual(1, len(ex))
+
+    def test_equivalent_empty(self):
+        status, ex = dt.find_counterexamples(
+            "method Max(a: int, b: int) returns (r: int)", [], "x", "y",
+            _run=lambda src: (0, ""),
+        )
+        self.assertEqual("equivalent", status)
+        self.assertEqual([], ex)
+
+    def test_harness_prints_input_and_outputs(self):
+        h = dt.build_harness(
+            "method Max(a: int, b: int) returns (r: int)", [], "x", "y", ["5, 2"])
+        self.assertIn("MISMATCH in=(5, 2)", h)
+        self.assertIn('ref=", r, " cand=", c', h)
 
 
 if __name__ == "__main__":
